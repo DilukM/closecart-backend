@@ -1,13 +1,13 @@
-const ErrorResponse = require('../utils/errorResponse');
-const User = require('../models/user');
-const Shop = require('../models/shop');
+import ErrorResponse from '../utils/errorResponse.js';
+import User from '../models/user.js';
+import Shop from '../models/shop.js';
 
 const sendTokenResponse = (user, statusCode, res) => {
   const token = user.getSignedJwtToken();
   res.status(statusCode).json({ success: true, token });
 };
 
-exports.register = async (req, res, next) => {
+export async function register(req, res, next) {
   try {
     const { email, password, shopName, shopAddress } = req.body;
     
@@ -18,9 +18,9 @@ exports.register = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-};
+}
 
-exports.login = async (req, res, next) => {
+export async function login(req, res, next) {
   try {
     const { email, password } = req.body;
     
@@ -42,4 +42,4 @@ exports.login = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-};
+}

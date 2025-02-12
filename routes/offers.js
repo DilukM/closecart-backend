@@ -1,19 +1,15 @@
-const express = require('express');
-const router = express.Router();
-const { protect } = require('../middleware/auth');
-const {
+import { Router } from "express";
+const router = Router();
+import { protect } from "../middleware/auth.js";
+import {
   getOffers,
   createOffer,
   updateOffer,
-  deleteOffer
-} = require('../controllers/offerController');
+  deleteOffer,
+} from "../controllers/offerController.js";
 
-router.route('/')
-  .get(protect, getOffers)
-  .post(protect, createOffer);
+router.route("/").get(protect, getOffers).post(protect, createOffer);
 
-router.route('/:id')
-  .put(protect, updateOffer)
-  .delete(protect, deleteOffer);
+router.route("/:id").put(protect, updateOffer).delete(protect, deleteOffer);
 
-module.exports = router;
+export default router;

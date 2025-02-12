@@ -1,20 +1,20 @@
-const Offer = require("../models/offer");
+import { find, create, findByIdAndUpdate, findByIdAndDelete } from "../models/offer.js";
 
-exports.getShopOffers = async (shopId) => {
-  return await Offer.find({ shop: shopId });
-};
+export async function getShopOffers(shopId) {
+  return await find({ shop: shopId });
+}
 
-exports.createOffer = async (offerData) => {
-  return await Offer.create(offerData);
-};
+export async function createOffer(offerData) {
+  return await create(offerData);
+}
 
-exports.updateOffer = async (offerId, updateData) => {
-  return await Offer.findByIdAndUpdate(offerId, updateData, {
+export async function updateOffer(offerId, updateData) {
+  return await findByIdAndUpdate(offerId, updateData, {
     new: true,
     runValidators: true,
   });
-};
+}
 
-exports.deleteOffer = async (offerId) => {
-  return await Offer.findByIdAndDelete(offerId);
-};
+export async function deleteOffer(offerId) {
+  return await findByIdAndDelete(offerId);
+}

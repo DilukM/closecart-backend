@@ -1,16 +1,16 @@
-const ErrorResponse = require("../utils/errorResponse");
-const Offer = require("../models/offer");
+import ErrorResponse from "../utils/errorResponse.js";
+import Offer from "../models/offer.js";
 
-exports.getOffers = async (req, res, next) => {
+export async function getOffers(req, res, next) {
   try {
     const offers = await Offer.find({ shop: req.user.shop });
     res.status(200).json({ success: true, data: offers });
   } catch (err) {
     next(err);
   }
-};
+}
 
-exports.createOffer = async (req, res, next) => {
+export async function createOffer(req, res, next) {
   try {
     req.body.shop = req.user.shop;
     const offer = await Offer.create(req.body);
@@ -18,9 +18,9 @@ exports.createOffer = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-};
+}
 
-exports.updateOffer = async (req, res, next) => {
+export async function updateOffer(req, res, next) {
   try {
     let offer = await Offer.findById(req.params.id);
 
@@ -45,9 +45,9 @@ exports.updateOffer = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-};
+}
 
-exports.deleteOffer = async (req, res, next) => {
+export async function deleteOffer(req, res, next) {
   try {
     const offer = await Offer.findById(req.params.id);
 
@@ -68,4 +68,4 @@ exports.deleteOffer = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-};
+}

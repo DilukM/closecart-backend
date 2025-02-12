@@ -1,8 +1,8 @@
-const jwt = require("jsonwebtoken");
-const ErrorResponse = require("../utils/errorResponse");
-const User = require("../models/user");
+import jwt from "jsonwebtoken";
+import ErrorResponse from "../utils/errorResponse.js";
+import User from "../models/user.js";
 
-exports.protect = async (req, res, next) => {
+export async function protect(req, res, next) {
   let token;
 
   if (
@@ -23,13 +23,13 @@ exports.protect = async (req, res, next) => {
   } catch (err) {
     return next(new ErrorResponse("Not authorized to access this route", 401));
   }
-};
+}
 
-exports.shopOwnership = (req, res, next) => {
+export function shopOwnership(req, res, next) {
   if (req.user.shop.toString() !== req.params.shopId) {
     return next(
       new ErrorResponse(`User not authorized to manage this shop`, 403)
     );
   }
   next();
-};
+}

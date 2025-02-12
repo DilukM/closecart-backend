@@ -1,20 +1,20 @@
-const User = require('../models/user');
-const Shop = require('../models/shop');
+import { create, findOne } from '../models/user';
+import { create as _create } from '../models/shop';
 
-exports.registerUser = async (userData) => {
-  const shop = await Shop.create({ name: userData.shopName, address: userData.shopAddress });
-  const user = await User.create({ 
+export async function registerUser(userData) {
+  const shop = await _create({ name: userData.shopName, address: userData.shopAddress });
+  const user = await create({ 
     email: userData.email, 
     password: userData.password,
     shop: shop._id
   });
   return user;
-};
+}
 
-exports.loginUser = async (email, password) => {
-  const user = await User.findOne({ email }).select('+password');
+export async function loginUser(email, password) {
+  const user = await findOne({ email }).select('+password');
   if (!user || !(await user.matchPassword(password))) {
     throw new Error('Invalid credentials');
   }
   return user;
-};
+}

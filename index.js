@@ -1,19 +1,17 @@
-const express = require("express");
-const json = require("express");
-const mongoose = require("mongoose");
-const dotenv = require("dotenv");
-const cors = require("cors");
-const helmet = require("helmet");
-const xss = require("xss-clean");
-const mongoSanitize = require("express-mongo-sanitize");
-const connectDB = require("./config/db");
-const logger = require("./utils/logger");
+import express, { json as _json } from "express";
+import { config } from "dotenv";
+import cors from "cors";
+import helmet from "helmet";
+import xss from "xss-clean";
+import mongoSanitize from "express-mongo-sanitize";
+import connectDB from "./config/db.js";
+import Logger from "./utils/logger.js";
 
 // Load env vars
-dotenv.config();
+config();
 
 const app = express();
-app.use(json());
+app.use(_json());
 
 // Connect to database
 connectDB().then(() => {
@@ -23,12 +21,12 @@ connectDB().then(() => {
 });
 
 // Route files
-const auth = require("./routes/auth");
-const shops = require("./routes/shops");
-const offers = require("./routes/offers");
+import auth from "./routes/auth.js";
+import shops from "./routes/shops.js";
+import offers from "./routes/offers.js";
 
 // Body parser
-app.use(express.json());
+app.use(_json());
 
 // Sanitize data
 app.use(mongoSanitize());
@@ -48,18 +46,18 @@ app.use("/api/v1/shops", shops);
 app.use("/api/v1/offers", offers);
 
 // Error handling middleware
-const errorHandler = require("./middleware/error");
+import errorHandler from "./middleware/error.js";
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
 const server = app.listen(PORT, () => {
-  logger.info(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+  Logger.info(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
 });
 
 // Handle unhandled promise rejections
 process.on("unhandledRejection", (err, promise) => {
-  logger.error(`Error: ${err.message}`);
+  Logger.error(`Error: ${err.message}`);
   // Close server & exit process
   server.close(() => process.exit(1));
 });

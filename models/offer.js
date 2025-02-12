@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+import { Schema, model } from 'mongoose';
 
-const OfferSchema = new mongoose.Schema({
+const OfferSchema = new Schema({
   title: {
     type: String,
     required: [true, 'Please add a title'],
@@ -18,7 +18,7 @@ const OfferSchema = new mongoose.Schema({
     max: [100, 'Discount can not be more than 100%']
   },
   shop: {
-    type: mongoose.Schema.ObjectId,
+    type: Schema.ObjectId,
     ref: 'Shop',
     required: true
   },
@@ -28,4 +28,4 @@ const OfferSchema = new mongoose.Schema({
   }
 });
 
-module.exports = mongoose.model('Offer', OfferSchema);
+export default model('Offer', OfferSchema);

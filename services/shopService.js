@@ -1,12 +1,12 @@
-const Shop = require('../models/shop');
+import Shop from "../models/shop.js";
 
-exports.getShopById = async (shopId) => {
+export async function getShopById(shopId) {
   return await Shop.findById(shopId);
-};
+}
 
-exports.updateShop = async (shopId, updateData) => {
+export async function updateShop(shopId, updateData) {
   return await Shop.findByIdAndUpdate(shopId, updateData, {
     new: true,
-    runValidators: true
+    runValidators: true,
   });
-};
+}
