@@ -1,4 +1,5 @@
 const express = require("express");
+const json = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
@@ -12,6 +13,7 @@ const logger = require("./utils/logger");
 dotenv.config();
 
 const app = express();
+app.use(json());
 
 // Connect to database
 connectDB().then(() => {
