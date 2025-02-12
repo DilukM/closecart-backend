@@ -11,10 +11,12 @@ const logger = require("./utils/logger");
 // Load env vars
 dotenv.config();
 
+const app = express();
+
 // Connect to database
 connectDB().then(() => {
   app.get("/", (req, res) => {
-    res.send("MongoDB Connected");
+    res.send("Hello World!");
   });
 });
 
@@ -22,8 +24,6 @@ connectDB().then(() => {
 const auth = require("./routes/auth");
 const shops = require("./routes/shops");
 const offers = require("./routes/offers");
-
-const app = express();
 
 // Body parser
 app.use(express.json());
@@ -52,9 +52,7 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 5000;
 
 const server = app.listen(PORT, () => {
-  app.get("/", (req, res) => {
-    res.send("MongoDB Connected");
-  });
+  logger.info(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
 });
 
 // Handle unhandled promise rejections
