@@ -63,7 +63,7 @@ export async function deleteOffer(req, res, next) {
       );
     }
 
-    await offer.remove();
+    await Offer.findByIdAndDelete(req.params.id);
     res.status(200).json({ success: true, data: {} });
   } catch (err) {
     next(err);
