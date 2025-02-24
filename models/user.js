@@ -48,9 +48,13 @@ UserSchema.methods.matchPassword = async function (enteredPassword) {
 
 // Sign JWT and return
 UserSchema.methods.getSignedJwtToken = function () {
-  return sign({ id: this._id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRE,
-  });
+  return sign(
+    { id: this._id, email: this.email, shopId: this.shop },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: process.env.JWT_EXPIRE,
+    }
+  );
 };
 
 export default models.User || model("User", UserSchema);
