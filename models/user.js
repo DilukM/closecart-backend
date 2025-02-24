@@ -17,6 +17,12 @@ const UserSchema = new Schema({
       "Please add a valid email",
     ],
   },
+  phone: {
+    type: String,
+    required: true,
+    unique: true,
+    match: [/^(\+94|0)\d{9}$/, "Please add a valid phone number"],
+  },
   password: {
     type: String,
     required: true,
@@ -49,7 +55,7 @@ UserSchema.methods.matchPassword = async function (enteredPassword) {
 // Sign JWT and return
 UserSchema.methods.getSignedJwtToken = function () {
   return sign(
-    { id: this._id, email: this.email, shopId: this.shop },
+    { id: this._id, email: this.email, shopId: this.shop, phone: this.phone },
     process.env.JWT_SECRET,
     {
       expiresIn: process.env.JWT_EXPIRE,
