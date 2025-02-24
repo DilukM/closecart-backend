@@ -21,6 +21,7 @@ const UserSchema = new Schema({
     type: String,
     required: true,
     unique: true,
+    match: [/^(\+94|0)\d{9}$/, "Please add a valid phone number"],
   },
   password: {
     type: String,
