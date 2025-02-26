@@ -1,6 +1,15 @@
 import ErrorResponse from "../utils/errorResponse.js";
 import Offer from "../models/offer.js";
 
+export async function getAllOffers(req, res, next) {
+  try {
+    const offers = await Offer.find ;
+    res.status(200).json({ success: true, data: offers });
+  } catch (err) {
+    next(err);
+  }
+}
+
 export async function getOffers(req, res, next) {
   try {
     const offers = await Offer.find({ shop: req.user.shop });
