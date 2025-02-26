@@ -3,7 +3,7 @@ import Offer from "../models/offer.js";
 
 export async function getAllOffers(req, res, next) {
   try {
-    const offers = Offer.find ;
+    const offers = await Offer.find();
     res.status(200).json({ success: true, data: offers });
   } catch (err) {
     next(err);

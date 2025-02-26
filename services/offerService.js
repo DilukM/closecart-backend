@@ -1,10 +1,15 @@
-import { find, create, findByIdAndUpdate, findByIdAndDelete } from "../models/offer.js";
+import {
+  find,
+  create,
+  findByIdAndUpdate,
+  findByIdAndDelete,
+} from "../models/offer.js";
 
 export async function getShopOffers(shopId) {
   return await find({ shop: shopId });
 }
 export async function getAllOffers() {
-  return await find({  });
+  return await find();
 }
 
 export async function createOffer(offerData) {
