@@ -5,12 +5,18 @@ import helmet from "helmet";
 import xss from "xss-clean";
 import mongoSanitize from "express-mongo-sanitize";
 import connectDB from "./config/db.js";
+import http from "http";
+import { Server } from "socket.io";
 import Logger from "./utils/logger.js";
 
 // Load env vars
 config();
 
 const app = express();
+const CCserver = http.createServer(app);
+const io = new Server(CCserver, {
+  cors: { origin: "*" }, // Allow all origins
+});
 app.use(_json());
 
 // Connect to database
@@ -24,6 +30,7 @@ connectDB().then(() => {
 import auth from "./routes/auth.js";
 import shops from "./routes/shops.js";
 import offers from "./routes/offers.js";
+import location from "./routes/location.js";
 
 // Body parser
 app.use(_json());
@@ -44,6 +51,31 @@ app.use(cors());
 app.use("/api/v1/auth", auth);
 app.use("/api/v1/shops", shops);
 app.use("/api/v1/offers", offers);
+app.use("/api/v1/location", location);
+
+// WebSocket Connection
+io.on('connection', (socket) => {
+  console.log(`User Connected: ${socket.id}`);
+
+  // Receiving location updates from users
+  socket.on('updateLocation', async (data) => {
+    const { userId, latitude, longitude, timestamp } = data;
+
+    try {
+      // Save every location update (for tracking movement)
+      const location = new Location({ userId, latitude, longitude, timestamp });
+      await location.save();
+
+      console.log(`Location saved for user: ${userId}`);
+    } catch (error) {
+      console.error('Error saving location:', error);
+    }
+  });
+
+  socket.on('disconnect', () => {
+    console.log(`User Disconnected: ${socket.id}`);
+  });
+});
 
 // Error handling middleware
 import errorHandler from "./middleware/error.js";
