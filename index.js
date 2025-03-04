@@ -31,6 +31,7 @@ import auth from "./routes/auth.js";
 import shops from "./routes/shops.js";
 import offers from "./routes/offers.js";
 import location from "./routes/location.js";
+import consumer from "./routes/consumer.js";
 
 // Body parser
 app.use(_json());
@@ -52,13 +53,14 @@ app.use("/api/v1/auth", auth);
 app.use("/api/v1/shops", shops);
 app.use("/api/v1/offers", offers);
 app.use("/api/v1/location", location);
+app.use("/api/v1/consumer", consumer);
 
 // WebSocket Connection
-io.on('connection', (socket) => {
+io.on("connection", (socket) => {
   console.log(`User Connected: ${socket.id}`);
 
   // Receiving location updates from users
-  socket.on('updateLocation', async (data) => {
+  socket.on("updateLocation", async (data) => {
     const { userId, latitude, longitude, timestamp } = data;
 
     try {
@@ -68,11 +70,11 @@ io.on('connection', (socket) => {
 
       console.log(`Location saved for user: ${userId}`);
     } catch (error) {
-      console.error('Error saving location:', error);
+      console.error("Error saving location:", error);
     }
   });
 
-  socket.on('disconnect', () => {
+  socket.on("disconnect", () => {
     console.log(`User Disconnected: ${socket.id}`);
   });
 });

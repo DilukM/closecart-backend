@@ -22,6 +22,18 @@ const OfferSchema = new Schema({
     ref: "Shop",
     required: true,
   },
+  tags: {
+    type: [String],
+    default: [],
+  },
+  category: {
+    type: String,
+    required: [true, "Please add a category"],
+  },
+  rating: {
+    type: Number,
+    default: 0,
+  },
   startDate: {
     type: Date,
     required: [true, "Please add a start date"],
