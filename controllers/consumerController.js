@@ -45,6 +45,29 @@ export const signIn = async (req, res, next) => {
   }
 };
 
+export const getAllProfiles = async (req, res, next) => {
+  try {
+    const users = await Consumer.find();
+    res.status(200).json({ success: true, data: users });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getProfile = async (req, res, next) => {
+  try {
+    const user = await Consumer.findById(req.params.id);
+
+    if (!user) {
+      return next(new ErrorResponse("User not found", 404));
+    }
+
+    res.status(200).json({ success: true, data: user });
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const changePassword = async (req, res, next) => {
   try {
     const { oldPassword, newPassword } = req.body;

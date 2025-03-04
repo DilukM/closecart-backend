@@ -2,6 +2,8 @@ import express from "express";
 import {
   signUp,
   signIn,
+  getAllProfiles,
+  getProfile,
   changePassword,
   forgotPassword,
   updateProfile,
@@ -28,6 +30,9 @@ router.put("/change-password", changePassword);
 router.post("/forgot-password", forgotPassword);
 router.put("/update-profile", updateProfile);
 router.delete("/delete-profile", deleteProfile);
+
+router.get("/", getAllProfiles);
+router.get("/:id", getProfile);
 
 router.get("/liked-offers", getLikedOffers);
 router.post("/liked-offers", addLikedOffer);
