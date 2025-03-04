@@ -30,8 +30,8 @@ const ConsumerSchema = new Schema({
   },
   gender: {
     type: String,
-    enum: ["male", "female", "other"],
-    default: "other",
+    enum: ["Male", "Female", "Other"],
+    default: "Other",
     required: [true, "Please select a gender"],
   },
   birthday: {
