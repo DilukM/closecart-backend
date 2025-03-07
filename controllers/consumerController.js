@@ -97,6 +97,7 @@ export const getProfile = async (req, res, next) => {
 };
 
 export const uploadProfileImage = async (req, res, next) => {
+  console.log("Upload image running");
   try {
     // Use the middleware as a function with callbacks
     upload(req, res, async function (err) {
@@ -110,14 +111,14 @@ export const uploadProfileImage = async (req, res, next) => {
 
       // Get user ID from authenticated user
       const userId = req.params.id;
-      
+
       // Cloudinary automatically uploads the file
       // req.file.path contains the URL from Cloudinary
       const imageUrl = req.file.path;
 
       res.status(200).json({
         success: true,
-        data: { imageUrl }
+        data: { imageUrl },
       });
     });
   } catch (err) {
