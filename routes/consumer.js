@@ -7,6 +7,7 @@ import {
   changePassword,
   forgotPassword,
   updateProfile,
+  uploadProfileImage,
   deleteProfile,
   getLikedOffers,
   addLikedOffer,
@@ -29,6 +30,7 @@ router.post("/signin", signIn);
 router.put("/change-password", changePassword);
 router.post("/forgot-password", forgotPassword);
 router.put("/update-profile/:id", updateProfile);
+router.put("/upload-image/:id", uploadProfileImage);
 router.delete("/delete-profile", deleteProfile);
 
 router.get("/", getAllProfiles);

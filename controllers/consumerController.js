@@ -2,10 +2,38 @@ import Consumer from "../models/consumer.js";
 import ErrorResponse from "../utils/errorResponse.js";
 import sendEmail from "../utils/sendEmail.js";
 
+import multer from "multer";
+import { v2 as cloudinary } from "cloudinary";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
+
 const sendTokenResponse = (user, statusCode, res) => {
   const token = user.getSignedJwtToken();
   res.status(statusCode).json({ success: true, token });
 };
+
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+// Configure storage
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "closecart_consumer_profiles",
+    allowed_formats: ["jpg", "png", "jpeg", "gif"],
+    filename: function (req, file, cb) {
+      // Use the user ID as filename
+      const userId = req.params.id;
+      cb(null, userId);
+    },
+  },
+});
+
+// Setup multer with cloudinary storage
+const upload = multer({ storage }).single("profileImage");
 
 export const signUp = async (req, res, next) => {
   try {
@@ -63,6 +91,35 @@ export const getProfile = async (req, res, next) => {
     }
 
     res.status(200).json({ success: true, data: user });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const uploadProfileImage = async (req, res, next) => {
+  try {
+    // Use the middleware as a function with callbacks
+    upload(req, res, async function (err) {
+      if (err) {
+        return next(new ErrorResponse(err.message, 400));
+      }
+
+      if (!req.file) {
+        return next(new ErrorResponse("Please upload an image file", 400));
+      }
+
+      // Get user ID from authenticated user
+      const userId = req.params.id;
+      
+      // Cloudinary automatically uploads the file
+      // req.file.path contains the URL from Cloudinary
+      const imageUrl = req.file.path;
+
+      res.status(200).json({
+        success: true,
+        data: { imageUrl }
+      });
+    });
   } catch (err) {
     next(err);
   }
@@ -153,10 +210,14 @@ export const updateProfile = async (req, res, next) => {
       imageUrl: req.body.imageUrl,
     };
 
-    const user = await Consumer.findByIdAndUpdate(req.params.id, fieldsToUpdate, {
-      new: true,
-      runValidators: true,
-    });
+    const user = await Consumer.findByIdAndUpdate(
+      req.params.id,
+      fieldsToUpdate,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
 
     if (!user) {
       return next(new ErrorResponse("User not found", 404));
