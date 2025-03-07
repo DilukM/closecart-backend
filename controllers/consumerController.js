@@ -153,7 +153,7 @@ export const updateProfile = async (req, res, next) => {
       imageUrl: req.body.imageUrl,
     };
 
-    const user = await Consumer.findByIdAndUpdate(req.user.id, fieldsToUpdate, {
+    const user = await Consumer.findByIdAndUpdate(req.params.id, fieldsToUpdate, {
       new: true,
       runValidators: true,
     });

@@ -28,7 +28,7 @@ router.post("/signup", signUp);
 router.post("/signin", signIn);
 router.put("/change-password", changePassword);
 router.post("/forgot-password", forgotPassword);
-router.put("/update-profile", updateProfile);
+router.put("/update-profile/:id", updateProfile);
 router.delete("/delete-profile", deleteProfile);
 
 router.get("/", getAllProfiles);
