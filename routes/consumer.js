@@ -22,16 +22,17 @@ import {
   addInterestedCategory,
   deleteInterestedCategory,
 } from "../controllers/consumerController.js";
+import { protect } from "../middleware/auth.js";
 
 const router = express.Router();
 
 router.post("/signup", signUp);
 router.post("/signin", signIn);
-router.put("/change-password", changePassword);
+router.put("/change-password", protect, changePassword);
 router.post("/forgot-password", forgotPassword);
-router.put("/update-profile/:id", updateProfile);
-router.put("/upload-image/:id", uploadProfileImage);
-router.delete("/delete-profile", deleteProfile);
+router.put("/update-profile/:id", protect, updateProfile);
+router.put("/upload-image/:id", protect, uploadProfileImage);
+router.delete("/delete-profile", protect, deleteProfile);
 
 router.get("/", getAllProfiles);
 router.get("/:id", getProfile);
