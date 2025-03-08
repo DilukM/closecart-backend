@@ -247,7 +247,7 @@ export const deleteProfile = async (req, res, next) => {
 
 export const getLikedOffers = async (req, res, next) => {
   try {
-    const user = await Consumer.findById(req.user.id).populate("likedOffers");
+    const user = await Consumer.findById(req.params.id).populate("likedOffers");
 
     if (!user) {
       return next(new ErrorResponse("User not found", 404));
@@ -288,7 +288,7 @@ export const addLikedOffer = async (req, res, next) => {
 
 export const deleteLikedOffer = async (req, res, next) => {
   try {
-    const user = await Consumer.findById(req.user.id);
+    const user = await Consumer.findById(req.body.userId);
 
     if (!user) {
       return next(new ErrorResponse("User not found", 404));

@@ -37,7 +37,7 @@ router.delete("/delete-profile", protect, deleteProfile);
 router.get("/", getAllProfiles);
 router.get("/:id", getProfile);
 
-router.get("/liked-offers", getLikedOffers);
+router.get("/liked-offers/:id", getLikedOffers);
 router.post("/liked-offers", addLikedOffer);
 router.delete("/liked-offers", deleteLikedOffer);
 
