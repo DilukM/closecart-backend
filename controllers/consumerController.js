@@ -24,10 +24,10 @@ const storage = new CloudinaryStorage({
   params: {
     folder: "closecart_consumer_profiles",
     allowed_formats: ["jpg", "png", "jpeg", "gif"],
-    filename: function (req, file, cb) {
+    public_id: (req, file) => {
       // Use the user ID as filename
-      const userId = req.params.id;
-      cb(null, userId);
+      const userId = req.params.id || "unknown";
+      return `user_${userId}`;
     },
   },
 });
@@ -97,7 +97,9 @@ export const getProfile = async (req, res, next) => {
 };
 
 export const uploadProfileImage = async (req, res, next) => {
-  console.log("Upload image running");
+  console.log(process.env.CLOUDINARY_API_KEY);
+  console.log(process.env.CLOUDINARY_CLOUD_NAME);
+  console.log(process.env.CLOUDINARY_API_SECRET);
   try {
     // Use the middleware as a function with callbacks
     upload(req, res, async function (err) {
