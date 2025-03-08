@@ -294,7 +294,7 @@ export const deleteLikedOffer = async (req, res, next) => {
       return next(new ErrorResponse("User not found", 404));
     }
 
-    const offerId = req.params.id;
+    const offerId = req.body.offerId;
 
     if (!user.likedOffers.includes(offerId)) {
       return next(new ErrorResponse("Offer not found in liked offers", 404));

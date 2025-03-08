@@ -39,7 +39,7 @@ router.get("/:id", getProfile);
 
 router.get("/liked-offers", getLikedOffers);
 router.post("/liked-offers", addLikedOffer);
-router.delete("/liked-offers/:id", deleteLikedOffer);
+router.delete("/liked-offers", deleteLikedOffer);
 
 router.get("/liked-shops", getLikedShops);
 router.post("/liked-shops", addLikedShop);
