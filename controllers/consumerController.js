@@ -97,9 +97,6 @@ export const getProfile = async (req, res, next) => {
 };
 
 export const uploadProfileImage = async (req, res, next) => {
-  console.log(process.env.CLOUDINARY_API_KEY);
-  console.log(process.env.CLOUDINARY_CLOUD_NAME);
-  console.log(process.env.CLOUDINARY_API_SECRET);
   try {
     // Use the middleware as a function with callbacks
     upload(req, res, async function (err) {
