@@ -1,13 +1,14 @@
-import { Router } from 'express';
+import { Router } from "express";
 const router = Router();
-import { protect } from '../middleware/auth.js';
-import { getShop, updateShop } from '../controllers/shopController.js';
+import { protect } from "../middleware/auth.js";
+import {
+  getShop,
+  updateShop,
+  updateShopLocation,
+} from "../controllers/shopController.js";
 
-router.route('/:shopId')
-  .get(protect, getShop)
-  .put(protect, updateShop);
+router.route("/:shopId").get(protect, getShop).put(protect, updateShop);
 
-  router.route('/:shopId/location')
-  .put(protect, updateShopLocation);
+router.route("/:shopId/location").put(protect, updateShopLocation);
 
 export default router;
