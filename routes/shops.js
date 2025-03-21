@@ -7,4 +7,7 @@ router.route('/:shopId')
   .get(protect, getShop)
   .put(protect, updateShop);
 
+  router.route('/:shopId/location')
+  .put(protect, updateShopLocation);
+
 export default router;
