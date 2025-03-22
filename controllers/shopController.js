@@ -47,13 +47,15 @@ export async function updateShop(req, res, next) {
 }
 
 export async function updateShopLocation(req, res, next) {
-  console.log(req.user);
   try {
     // Check if location data is provided
-    if (!req.body.longitude || !req.body.latitude) {
+    if (!req.body.location.longitude || !req.body.location.latitude) {
       return next(
         new ErrorResponse("Please provide longitude and latitude", 400)
       );
+    }
+    if (!req.body.address) {
+      return next(new ErrorResponse("Please provide address", 400));
     }
 
     let shop = await getShopById(req.params.shopId);
@@ -69,11 +71,12 @@ export async function updateShopLocation(req, res, next) {
 
     // Create the GeoJSON point object
     const locationData = {
+      address: req.body.address,
       location: {
         type: "Point",
         coordinates: [
-          parseFloat(req.body.longitude),
-          parseFloat(req.body.latitude),
+          parseFloat(req.body.location.longitude),
+          parseFloat(req.body.location.latitude),
         ],
       },
     };
