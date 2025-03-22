@@ -47,6 +47,7 @@ export async function updateShop(req, res, next) {
 }
 
 export async function updateShopLocation(req, res, next) {
+  console.log(req.user);
   try {
     // Check if location data is provided
     if (!req.body.longitude || !req.body.latitude) {
@@ -61,12 +62,10 @@ export async function updateShopLocation(req, res, next) {
         new ErrorResponse(`Shop not found with id ${req.params.shopId}`, 404)
       );
     }
-    console.log("shopId", shop._id.toString());
-    console.log("req user shop", req.user.shop.toString());
+
     if (shop._id.toString() !== req.user.shop.toString()) {
       return next(new ErrorResponse("Not authorized to update this shop", 403));
     }
-    console.log("User authorized");
 
     // Create the GeoJSON point object
     const locationData = {

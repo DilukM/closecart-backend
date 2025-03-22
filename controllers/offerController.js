@@ -20,8 +20,10 @@ export async function getOffers(req, res, next) {
 }
 
 export async function createOffer(req, res, next) {
+  console.log(req);
   try {
     req.body.shop = req.user.shop;
+
     const offer = await Offer.create(req.body);
     res.status(201).json({ success: true, data: offer });
   } catch (err) {
