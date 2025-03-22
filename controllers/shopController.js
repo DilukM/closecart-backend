@@ -69,7 +69,18 @@ export async function updateShopLocation(req, res, next) {
       return next(new ErrorResponse("Not authorized to update this shop", 403));
     }
 
-
+    // Create the GeoJSON point object
+    const locationData = {
+      address: req.body.address,
+      location: {
+        type: "Point",
+        coordinates: [
+          parseFloat(req.body.location.longitude),
+          parseFloat(req.body.location.latitude),
+        ],
+      },
+    };
+    console.log("Req Body", req.body);
 
     // Update just the location
     shop = await updateShopService(req.params.shopId, req.body);
