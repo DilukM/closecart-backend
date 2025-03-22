@@ -1,5 +1,5 @@
 import ErrorResponse from "../utils/errorResponse.js";
-import { getShopById, updateShop as updateShopService } from "../services/shopService.js";
+import { getShopById, updateShop as updateShopService,updateShopBusinessHours } from "../services/shopService.js";
 
 export async function getShop(req, res, next) {
   try {
@@ -82,6 +82,66 @@ export async function updateShopLocation(req, res, next) {
       data: {
         shop,
         location: shop.location
+      } 
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+/**
+ * @desc    Update shop business hours
+ * @route   PUT /api/shops/:shopId/business-hours
+ * @access  Private
+ */
+export async function updateShopBusinessHours(req, res, next) {
+  try {
+    // Check if business hours data is provided
+    if (!req.body || Object.keys(req.body).length === 0) {
+      return next(
+        new ErrorResponse("Please provide business hours data", 400)
+      );
+    }
+
+    let shop = await getShopById(req.params.shopId);
+
+    if (!shop) {
+      return next(
+        new ErrorResponse(`Shop not found with id ${req.params.shopId}`, 404)
+      );
+    }
+
+    if (shop._id.toString() !== req.user.shop.toString()) {
+      return next(new ErrorResponse("Not authorized to update this shop", 403));
+    }
+
+    // Validate the structure of each day's business hours
+    const validDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+    const businessHours = {};
+    
+    Object.keys(req.body).forEach(day => {
+      if (validDays.includes(day.toLowerCase())) {
+        const dayData = req.body[day];
+        
+        // Validate the day data
+        if (dayData && typeof dayData === 'object') {
+          businessHours[day] = {
+            open: dayData.open || shop.businessHours[day].open,
+            close: dayData.close || shop.businessHours[day].close,
+            isOpen: dayData.isOpen !== undefined ? dayData.isOpen : shop.businessHours[day].isOpen
+          };
+        }
+      }
+    });
+
+    // Update the business hours using the service
+    shop = await updateShopBusinessHours(req.params.shopId, businessHours);
+
+    res.status(200).json({ 
+      success: true, 
+      data: {
+        shop,
+        businessHours: shop.businessHours
       } 
     });
   } catch (err) {
