@@ -10,7 +10,7 @@ import {
 
 router.route("/:shopId").get(protect, getShop).put(protect, updateShop);
 
-router.route("/:shopId/location").put(protect, updateShopLocation);
+router.route("/:shopId/location").put(updateShopLocation);
 router.route("/:shopId/business-hours").put(protect, updateShopBusinessHours);
 
 export default router;
