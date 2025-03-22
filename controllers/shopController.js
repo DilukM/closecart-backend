@@ -61,8 +61,8 @@ export async function updateShopLocation(req, res, next) {
         new ErrorResponse(`Shop not found with id ${req.params.shopId}`, 404)
       );
     }
-    console.log(shop._id.toString());
-    console.log(req.user.shop.toString());
+    console.log("shopId", shop._id.toString());
+    console.log("req user shop", req.user.shop.toString());
     if (shop._id.toString() !== req.user.shop.toString()) {
       return next(new ErrorResponse("Not authorized to update this shop", 403));
     }
@@ -78,7 +78,7 @@ export async function updateShopLocation(req, res, next) {
         ],
       },
     };
-    console.log("locationData", locationData);
+
     // Update just the location
     shop = await updateShopService(req.params.shopId, locationData);
 
