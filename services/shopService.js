@@ -44,3 +44,23 @@ export async function updateShopBusinessHours(shopId, businessHours) {
   
   return shop;
 }
+
+export async function updateShopImages(shopId, imageData) {
+  const updateData = {};
+  
+  if (imageData.logo) {
+    updateData.logo = imageData.logo;
+  }
+  
+  if (imageData.coverImage) {
+    updateData.coverImage = imageData.coverImage;
+  }
+  
+  const shop = await Shop.findByIdAndUpdate(
+    shopId,
+    { $set: updateData },
+    { new: true, runValidators: true }
+  );
+  
+  return shop;
+}

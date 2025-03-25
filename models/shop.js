@@ -43,11 +43,11 @@ const ShopSchema = new Schema({
     default: {}
     // Example: { "facebook": "https://facebook.com/shopname", "instagram": "https://instagram.com/shopname" }
   },
-  coverImageUrl: {
+  coverImage: {
     type: String,
     default: "https://via.placeholder.com/1200x300"
   },
-  logoUrl: {
+  logo: {
     type: String,
     default: "https://via.placeholder.com/200x200"
   },

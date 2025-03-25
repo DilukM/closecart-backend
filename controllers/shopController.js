@@ -2,7 +2,7 @@ import ErrorResponse from "../utils/errorResponse.js";
 import {
   getShopById,
   updateShop as updateShopService,
-  updateShopBusinessHours as updateShopBusinessHoursService,
+  updateShopBusinessHours as updateShopBusinessHoursService,updateShopImagesService,
 } from "../services/shopService.js";
 
 export async function getShop(req, res, next) {
@@ -69,18 +69,6 @@ export async function updateShopLocation(req, res, next) {
       return next(new ErrorResponse("Not authorized to update this shop", 403));
     }
 
-    // Create the GeoJSON point object
-    const locationData = {
-      address: req.body.address,
-      location: {
-        type: "Point",
-        coordinates: [
-          parseFloat(req.body.location.longitude),
-          parseFloat(req.body.location.latitude),
-        ],
-      },
-    };
-    console.log("Req Body", req.body);
 
     // Update just the location
     shop = await updateShopService(req.params.shopId, req.body);
@@ -163,6 +151,50 @@ export async function updateShopBusinessHours(req, res, next) {
         shop,
         businessHours: shop.businessHours,
       },
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function updateShopImages(req, res, next) {
+  try {
+    // Check if image data is provided
+    if (!req.body.logo && !req.body.coverImage) {
+      return next(
+        new ErrorResponse("Please provide at least one image URL (logo or coverImage)", 400)
+      );
+    }
+
+    let shop = await getShopById(req.params.shopId);
+
+    if (!shop) {
+      return next(
+        new ErrorResponse(`Shop not found with id ${req.params.shopId}`, 404)
+      );
+    }
+
+    if (shop._id.toString() !== req.user.shop.toString()) {
+      return next(new ErrorResponse("Not authorized to update this shop", 403));
+    }
+
+    const imageData = {
+      logo: req.body.logo,
+      coverImage: req.body.coverImage
+    };
+
+    // Update the shop images using the service
+    shop = await updateShopImagesService(req.params.shopId, imageData);
+
+    res.status(200).json({ 
+      success: true, 
+      data: {
+        shop,
+        images: {
+          logo: shop.logo,
+          coverImage: shop.coverImage
+        }
+      } 
     });
   } catch (err) {
     next(err);
