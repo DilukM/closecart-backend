@@ -1,10 +1,145 @@
 import ErrorResponse from "../utils/errorResponse.js";
+import multer from "multer";
+
+import { v2 as cloudinary } from "cloudinary";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
+
 import {
   getShopById,
   updateShop as updateShopService,
   updateShopBusinessHours as updateShopBusinessHoursService,
   updateShopImages as updateShopImagesService,
 } from "../services/shopService.js";
+
+
+
+// Configure Cloudinary (if not already configured)
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+// Configure logo storage
+const logoStorage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "closecart_shop_logos",
+    allowed_formats: ["jpg", "png", "jpeg", "gif"],
+    public_id: (req, file) => {
+      // Use the shop ID as filename
+      const shopId = req.params.shopId || "unknown";
+      return `shop_${shopId}_logo`;
+    },
+  },
+});
+
+// Configure cover image storage
+const coverImageStorage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "closecart_shop_covers",
+    allowed_formats: ["jpg", "png", "jpeg", "gif"],
+    public_id: (req, file) => {
+      // Use the shop ID as filename
+      const shopId = req.params.shopId || "unknown";
+      return `shop_${shopId}_cover`;
+    },
+  },
+});
+
+
+// Setup multer with respective storage
+const uploadLogo = multer({ storage: logoStorage }).single("logo");
+const uploadCoverImage = multer({ storage: coverImageStorage }).single("coverImage");
+
+export async function uploadShopLogo(req, res, next) {
+  try {
+    // First check if shop exists and user is authorized
+    const shop = await getShopById(req.params.shopId);
+
+    if (!shop) {
+      return next(
+        new ErrorResponse(`Shop not found with id ${req.params.shopId}`, 404)
+      );
+    }
+
+    if (shop._id.toString() !== req.user.shop.toString()) {
+      return next(new ErrorResponse("Not authorized to update this shop", 403));
+    }
+
+    // Use the middleware as a function with callbacks
+    uploadLogo(req, res, async function (err) {
+      if (err) {
+        return next(new ErrorResponse(err.message, 400));
+      }
+
+      if (!req.file) {
+        return next(new ErrorResponse("Please upload a logo image file", 400));
+      }
+
+      // Cloudinary automatically uploads the file
+      const logoUrl = req.file.path;
+
+      // Update the shop with the new logo URL:
+      await updateShopImagesService(req.params.shopId, { logo: logoUrl });
+
+      res.status(200).json({
+        success: true,
+        data: { logoUrl },
+      });
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+/**
+ * @desc    Upload shop cover image
+ * @route   POST /api/shops/:shopId/cover-image
+ * @access  Private
+ */
+export async function uploadShopCoverImage(req, res, next) {
+  try {
+    // First check if shop exists and user is authorized
+    const shop = await getShopById(req.params.shopId);
+
+    if (!shop) {
+      return next(
+        new ErrorResponse(`Shop not found with id ${req.params.shopId}`, 404)
+      );
+    }
+
+    if (shop._id.toString() !== req.user.shop.toString()) {
+      return next(new ErrorResponse("Not authorized to update this shop", 403));
+    }
+
+    // Use the middleware as a function with callbacks
+    uploadCoverImage(req, res, async function (err) {
+      if (err) {
+        return next(new ErrorResponse(err.message, 400));
+      }
+
+      if (!req.file) {
+        return next(new ErrorResponse("Please upload a cover image file", 400));
+      }
+
+      // Cloudinary automatically uploads the file
+      // req.file.path contains the URL from Cloudinary
+      const coverImageUrl = req.file.path;
+
+      // Update the shop with the new cover image URL:
+      await updateShopImagesService(req.params.shopId, { coverImage: coverImageUrl });
+
+      res.status(200).json({
+        success: true,
+        data: { coverImageUrl },
+      });
+    });
+  } catch (err) {
+    next(err);
+  }
+}
 
 export async function getShop(req, res, next) {
   try {
