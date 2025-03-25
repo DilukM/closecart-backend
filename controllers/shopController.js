@@ -2,7 +2,8 @@ import ErrorResponse from "../utils/errorResponse.js";
 import {
   getShopById,
   updateShop as updateShopService,
-  updateShopBusinessHours as updateShopBusinessHoursService,updateShopImagesService,
+  updateShopBusinessHours as updateShopBusinessHoursService,
+  updateShopImages as updateShopImagesService,
 } from "../services/shopService.js";
 
 export async function getShop(req, res, next) {
@@ -68,7 +69,6 @@ export async function updateShopLocation(req, res, next) {
     if (shop._id.toString() !== req.user.shop.toString()) {
       return next(new ErrorResponse("Not authorized to update this shop", 403));
     }
-
 
     // Update just the location
     shop = await updateShopService(req.params.shopId, req.body);
@@ -162,7 +162,10 @@ export async function updateShopImages(req, res, next) {
     // Check if image data is provided
     if (!req.body.logo && !req.body.coverImage) {
       return next(
-        new ErrorResponse("Please provide at least one image URL (logo or coverImage)", 400)
+        new ErrorResponse(
+          "Please provide at least one image URL (logo or coverImage)",
+          400
+        )
       );
     }
 
@@ -180,21 +183,21 @@ export async function updateShopImages(req, res, next) {
 
     const imageData = {
       logo: req.body.logo,
-      coverImage: req.body.coverImage
+      coverImage: req.body.coverImage,
     };
 
     // Update the shop images using the service
     shop = await updateShopImagesService(req.params.shopId, imageData);
 
-    res.status(200).json({ 
-      success: true, 
+    res.status(200).json({
+      success: true,
       data: {
         shop,
         images: {
           logo: shop.logo,
-          coverImage: shop.coverImage
-        }
-      } 
+          coverImage: shop.coverImage,
+        },
+      },
     });
   } catch (err) {
     next(err);
