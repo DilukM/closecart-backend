@@ -1,39 +1,19 @@
 import Consumer from "../models/consumer.js";
 import ErrorResponse from "../utils/errorResponse.js";
 import sendEmail from "../utils/sendEmail.js";
-
-import multer from "multer";
-import { v2 as cloudinary } from "cloudinary";
-import { CloudinaryStorage } from "multer-storage-cloudinary";
+import { cloudinary, createUploader } from "../config/cloudinary.js";
 
 const sendTokenResponse = (user, statusCode, res) => {
   const token = user.getSignedJwtToken();
   res.status(statusCode).json({ success: true, token });
 };
 
-// Configure Cloudinary
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
-
-// Configure storage
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: "closecart_consumer_profiles",
-    allowed_formats: ["jpg", "png", "jpeg", "gif"],
-    public_id: (req, file) => {
-      // Use the user ID as filename
-      const userId = req.params.id || "unknown";
-      return `user_${userId}`;
-    },
-  },
-});
-
-// Setup multer with cloudinary storage
-const upload = multer({ storage }).single("profileImage");
+// Configure storage for consumer profile images
+const upload = createUploader("closecart_consumer_profiles", (req, file) => {
+  // Use the user ID as filename
+  const userId = req.params.id || "unknown";
+  return `user_${userId}`;
+}).single("profileImage");
 
 export const signUp = async (req, res, next) => {
   try {
