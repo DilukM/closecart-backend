@@ -25,28 +25,51 @@ export async function createOffer(req, res, next) {
     // Set the shop from the authenticated user
     req.body.shop = req.user.shop;
 
+    let initialImageUrl = null;
+    let publicId = null;
+
     // Check if an image was uploaded and properly processed by Cloudinary
     if (req.file) {
-      console.log("Image file uploaded:", req.file);
+      initialImageUrl = req.file.path || req.file.secure_url;
 
-      // In Cloudinary, the image URL is typically in req.file.path or req.file.secure_url
-      const imageUrl = req.file.path || req.file.secure_url;
-      console.log("Image URL to save:", imageUrl);
+      // Extract public_id from the Cloudinary URL
+      publicId = req.file.filename || req.file.public_id;
 
       // Explicitly set the image URL in the offer data
-      req.body.image = imageUrl;
+      req.body.image = initialImageUrl;
     } else {
       console.log("No image file uploaded with this offer");
     }
 
     // Create the offer with all data including the image URL
     const offer = await Offer.create(req.body);
-    console.log(
-      "Offer created successfully with ID:",
-      offer._id,
-      "and image:",
-      offer.image
-    );
+
+    // If we have an image, rename it to include the offer ID
+    if (initialImageUrl && publicId) {
+      try {
+        // Import cloudinary at the top of the file if not already imported
+        const { cloudinary } = await import("../config/cloudinary.js");
+
+        // Generate new public_id using offer ID
+        const newPublicId = `offers/offer_${offer._id}`;
+
+        // Rename the image in Cloudinary
+        const result = await cloudinary.uploader.rename(publicId, newPublicId);
+
+        // Update the offer with the new image URL
+        const updatedOffer = await Offer.findByIdAndUpdate(
+          offer._id,
+          { image: result.secure_url },
+          { new: true }
+        );
+
+        // Return the updated offer
+        return res.status(201).json({ success: true, data: updatedOffer });
+      } catch (renameError) {
+        console.error("Error renaming image:", renameError);
+        // Continue with the original offer if renaming fails
+      }
+    }
 
     res.status(201).json({ success: true, data: offer });
   } catch (err) {
