@@ -25,51 +25,18 @@ export async function createOffer(req, res, next) {
     // Set the shop from the authenticated user
     req.body.shop = req.user.shop;
 
-    let initialImageUrl = null;
-    let publicId = null;
-
     // Check if an image was uploaded and properly processed by Cloudinary
     if (req.file) {
-      initialImageUrl = req.file.path || req.file.secure_url;
-
-      // Extract public_id from the Cloudinary URL
-      publicId = req.file.filename || req.file.public_id;
+      const imageUrl = req.file.path || req.file.secure_url;
 
       // Explicitly set the image URL in the offer data
-      req.body.image = initialImageUrl;
+      req.body.image = imageUrl;
     } else {
       console.log("No image file uploaded with this offer");
     }
 
     // Create the offer with all data including the image URL
     const offer = await Offer.create(req.body);
-
-    // If we have an image, rename it to include the offer ID
-    if (initialImageUrl && publicId) {
-      try {
-        // Import cloudinary at the top of the file if not already imported
-        const { cloudinary } = await import("../config/cloudinary.js");
-
-        // Generate new public_id using offer ID
-        const newPublicId = `offers/offer_${offer._id}`;
-
-        // Rename the image in Cloudinary
-        const result = await cloudinary.uploader.rename(publicId, newPublicId);
-
-        // Update the offer with the new image URL
-        const updatedOffer = await Offer.findByIdAndUpdate(
-          offer._id,
-          { image: result.secure_url },
-          { new: true }
-        );
-
-        // Return the updated offer
-        return res.status(201).json({ success: true, data: updatedOffer });
-      } catch (renameError) {
-        console.error("Error renaming image:", renameError);
-        // Continue with the original offer if renaming fails
-      }
-    }
 
     res.status(201).json({ success: true, data: offer });
   } catch (err) {

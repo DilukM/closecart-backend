@@ -45,16 +45,12 @@ const createUploadMiddleware = (
           error: err.message,
         });
       }
- 
-      // Check if file was uploaded successfully and extract the URL and public_id
+
+      // Check if file was uploaded successfully and extract the URL
       if (req.file && req.file.path) {
         // Add the Cloudinary URL to the request body
         req.body.imageUrl = req.file.path;
-
-        // If the public_id is not already set, try to extract it
-        if (!req.file.public_id && req.file.filename) {
-          req.file.public_id = req.file.filename;
-        }
+        console.log("File uploaded successfully. URL:", req.file.path);
       }
 
       next();
