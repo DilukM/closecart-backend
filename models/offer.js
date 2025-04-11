@@ -44,7 +44,6 @@ const OfferSchema = new Schema({
   },
   imageUrl: {
     type: String,
-    required: [true, "Please add an image URL"],
   },
   createdAt: {
     type: Date,

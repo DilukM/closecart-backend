@@ -18,11 +18,15 @@ export async function getOffers(req, res, next) {
     next(err);
   }
 }
-
 export async function createOffer(req, res, next) {
-  console.log(req);
+  console.log("Creating offer with data:", req.body);
   try {
+    // Set the shop from the authenticated user
     req.body.shop = req.user.shop;
+
+    if (req.file) {
+      req.body.image = req.file.path;
+    }
 
     const offer = await Offer.create(req.body);
     res.status(201).json({ success: true, data: offer });
