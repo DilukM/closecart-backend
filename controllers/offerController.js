@@ -25,19 +25,28 @@ export async function createOffer(req, res, next) {
     // Set the shop from the authenticated user
     req.body.shop = req.user.shop;
 
-    // Check if an image was uploaded and properly processed by Cloudinary
-    if (req.file) {
-      const imageUrl = req.file.path || req.file.secure_url;
-
-      // Explicitly set the image URL in the offer data
-      req.body.image = imageUrl;
-    } else {
-      console.log("No image file uploaded with this offer");
-    }
-
-    // Create the offer with all data including the image URL
+    // First, create the offer without the image
     const offer = await Offer.create(req.body);
 
+    // Now check if an image was uploaded and update the offer
+    if (req.file) {
+      // Use the newly created offer ID for the image name
+      const imageUrl = req.file.path || req.file.secure_url;
+
+      // Update the offer with the image URL
+      const updatedOffer = await Offer.findByIdAndUpdate(
+        offer._id,
+        { image: imageUrl },
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
+
+      return res.status(201).json({ success: true, data: updatedOffer });
+    }
+
+    // Return the offer without image if no image was uploaded
     res.status(201).json({ success: true, data: offer });
   } catch (err) {
     console.error("Error creating offer:", err);
