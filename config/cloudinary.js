@@ -45,6 +45,14 @@ const createUploadMiddleware = (
           error: err.message,
         });
       }
+
+      // Check if file was uploaded successfully and extract the URL
+      if (req.file && req.file.path) {
+        // Add the Cloudinary URL to the request body
+        req.body.imageUrl = req.file.path;
+        console.log("File uploaded successfully. URL:", req.file.path);
+      }
+
       next();
     });
   };
