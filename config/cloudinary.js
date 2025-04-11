@@ -45,7 +45,7 @@ const createUploadMiddleware = (
           error: err.message,
         });
       }
-
+ 
       // Check if file was uploaded successfully and extract the URL and public_id
       if (req.file && req.file.path) {
         // Add the Cloudinary URL to the request body
