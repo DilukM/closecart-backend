@@ -19,7 +19,7 @@ const handleUpload = createUploadMiddleware(
 // Create upload middleware for offers
 const handleUpdateUpload = createUploadMiddleware(
   "closecart_offers",
-  (req, file) => `${req.body._id}`
+  (req, file) => `offer_${req.params.id}`
 );
 
 // Apply routes with middleware
