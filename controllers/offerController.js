@@ -67,7 +67,6 @@ export async function updateOffer(req, res, next) {
       const imageUrl = req.file.path || req.file.secure_url;
       console.log("New image URL to save:", imageUrl);
 
-      // Update the image field explicitly
       req.body.image = imageUrl;
     }
 
@@ -76,7 +75,6 @@ export async function updateOffer(req, res, next) {
       runValidators: true,
     });
 
-    console.log("Offer updated successfully with image:", offer.image);
     res.status(200).json({ success: true, data: offer });
   } catch (err) {
     console.error("Error updating offer:", err);
