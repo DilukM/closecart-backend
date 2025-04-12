@@ -24,8 +24,8 @@ const handleUpdateUpload = createUploadMiddleware(
 
 // Middleware to log request body
 const logRequestBody = (req, res, next) => {
-  console.log('Request Body:', req.body);
-  console.log('Request File:', req.file);
+  console.log("Request Body:", req.body);
+  console.log("Request File:", req.file);
   next();
 };
 
