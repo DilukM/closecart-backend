@@ -22,17 +22,17 @@ export async function getOffers(req, res, next) {
 export async function createOffer(req, res, next) {
   console.log("Creating offer with data:", req.body);
   try {
-    const offerData = { ...req.body };
+    
     // Set the shop from the authenticated user
-    offerData.shop = req.user.shop;
+    req.body.shop = req.user.shop;
 
-    // Parse tags if they're a string
-    if (offerData.tags && typeof offerData.tags === "string") {
+     // Parse tags if they're a string
+     if (req.body.tags && typeof req.body.tags === 'string') {
       try {
-        offerData.tags = JSON.parse(offerData.tags);
+        req.body.tags = JSON.parse(req.body.tags);
       } catch (error) {
-        console.error("Error parsing tags:", error);
-        offerData.tags = [];
+        console.error('Error parsing tags:', error);
+        req.body.tags = [];
       }
     }
     // Check if an image was uploaded and properly processed by Cloudinary
