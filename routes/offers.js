@@ -22,11 +22,18 @@ const handleUpdateUpload = createUploadMiddleware(
   (req, file) => `offer_${req.params.id}`
 );
 
+// Middleware to log request body
+const logRequestBody = (req, res, next) => {
+  console.log('Request Body:', req.body);
+  console.log('Request File:', req.file);
+  next();
+};
+
 // Apply routes with middleware
 router
   .route("/")
   .get(protect, getOffers)
-  .post(protect, handleUpload, createOffer);
+  .post(protect, handleUpload, logRequestBody, createOffer);
 router.route("/all").get(getAllOffers);
 
 router
