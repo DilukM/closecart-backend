@@ -3,16 +3,13 @@ import multer from "multer";
 
 import { v2 as cloudinary } from "cloudinary";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
-
+import Shop from "../models/shop.js";
 import {
   getShopById,
-  getAllShopsService,
   updateShop as updateShopService,
   updateShopBusinessHours as updateShopBusinessHoursService,
   updateShopImages as updateShopImagesService,
 } from "../services/shopService.js";
-
-
 
 // Configure Cloudinary (if not already configured)
 cloudinary.config({
@@ -49,10 +46,11 @@ const coverImageStorage = new CloudinaryStorage({
   },
 });
 
-
 // Setup multer with respective storage
 const uploadLogo = multer({ storage: logoStorage }).single("logo");
-const uploadCoverImage = multer({ storage: coverImageStorage }).single("coverImage");
+const uploadCoverImage = multer({ storage: coverImageStorage }).single(
+  "coverImage"
+);
 
 export async function uploadShopLogo(req, res, next) {
   try {
@@ -130,7 +128,9 @@ export async function uploadShopCoverImage(req, res, next) {
       const coverImageUrl = req.file.path;
 
       // Update the shop with the new cover image URL:
-      await updateShopImagesService(req.params.shopId, { coverImage: coverImageUrl });
+      await updateShopImagesService(req.params.shopId, {
+        coverImage: coverImageUrl,
+      });
 
       res.status(200).json({
         success: true,
@@ -162,12 +162,12 @@ export async function getShop(req, res, next) {
   }
 }
 export async function getAllShops(req, res, next) {
- try {
-     const shops = await getAllShopsService();
-     res.status(200).json({ success: true, data: shops });
-   } catch (err) {
-     next(err);
-   }
+  try {
+    const shops = await Shop.find();
+    res.status(200).json({ success: true, data: shops });
+  } catch (err) {
+    next(err);
+  }
 }
 
 export async function updateShop(req, res, next) {
@@ -228,7 +228,6 @@ export async function updateShopLocation(req, res, next) {
     next(err);
   }
 }
-
 
 export async function updateShopBusinessHours(req, res, next) {
   try {
