@@ -3,6 +3,9 @@ import Shop from "../models/shop.js";
 export async function getShopById(shopId) {
   return await Shop.findById(shopId);
 }
+export async function getAllShopsService() {
+  return await Shop.find();
+}
 
 export async function updateShop(shopId, updateData) {
   return await Shop.findByIdAndUpdate(shopId, updateData, {

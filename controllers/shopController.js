@@ -6,6 +6,7 @@ import { CloudinaryStorage } from "multer-storage-cloudinary";
 
 import {
   getShopById,
+  getAllShopsService,
   updateShop as updateShopService,
   updateShopBusinessHours as updateShopBusinessHoursService,
   updateShopImages as updateShopImagesService,
@@ -160,6 +161,14 @@ export async function getShop(req, res, next) {
     next(err);
   }
 }
+export async function getAllShops(req, res, next) {
+ try {
+     const shops = await getAllShopsService();
+     res.status(200).json({ success: true, data: shops });
+   } catch (err) {
+     next(err);
+   }
+}
 
 export async function updateShop(req, res, next) {
   try {
@@ -220,11 +229,7 @@ export async function updateShopLocation(req, res, next) {
   }
 }
 
-/**
- * @desc    Update shop business hours
- * @route   PUT /api/shops/:shopId/business-hours
- * @access  Private
- */
+
 export async function updateShopBusinessHours(req, res, next) {
   try {
     // Check if business hours data is provided

@@ -3,6 +3,7 @@ const router = Router();
 import { protect } from "../middleware/auth.js";
 import {
   getShop,
+  getAllShops,
   updateShop,
   updateShopLocation,
   updateShopBusinessHours,
@@ -11,6 +12,7 @@ import {
 } from "../controllers/shopController.js";
 
 router.route("/:shopId").get(protect, getShop).put(protect, updateShop);
+router.route("/all").get(protect, getAllShops);
 
 router.route("/:shopId/location").put(protect, updateShopLocation);
 router.route("/:shopId/business-hours").put(protect, updateShopBusinessHours);
