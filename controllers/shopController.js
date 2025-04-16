@@ -7,6 +7,7 @@ import { CloudinaryStorage } from "multer-storage-cloudinary";
 import {
   getShopById,
   getShopsWithDetails,
+  getAllShopsService,
   updateShop as updateShopService,
   updateShopBusinessHours as updateShopBusinessHoursService,
   updateShopImages as updateShopImagesService,
@@ -162,39 +163,16 @@ export async function getShop(req, res, next) {
     next(err);
   }
 }
+
 export async function getAllShops(req, res, next) {
   try {
-    // Extract query parameters
-    const { 
-      page = 1, 
-      limit = 10, 
-      sortBy = 'createdAt', 
-      sortOrder = 'desc',
-      fields,
-      ...filters 
-    } = req.query;
+    // Use the simple service function to get all shops without filtering
+    const shops = await getAllShopsService();
 
-    // Prepare options for the service
-    const options = {
-      filters,
-      sortBy,
-      sortOrder,
-      page: parseInt(page),
-      limit: parseInt(limit),
-      fields: fields ? fields.split(',') : []
-    };
-
-    // Get shops using the service
-    const result = await getShopsWithDetails(options);
-
-    res.status(200).json({ 
-      success: true, 
-      data: result.shops,
-      pagination: {
-        total: result.total,
-        page: result.page,
-        pages: result.pages
-      }
+    res.status(200).json({
+      success: true,
+      count: shops.length,
+      data: shops,
     });
   } catch (err) {
     next(err);
