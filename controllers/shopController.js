@@ -3,9 +3,10 @@ import multer from "multer";
 
 import { v2 as cloudinary } from "cloudinary";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
-import Shop from "../models/shop.js";
+
 import {
   getShopById,
+  getShopsWithDetails,
   updateShop as updateShopService,
   updateShopBusinessHours as updateShopBusinessHoursService,
   updateShopImages as updateShopImagesService,
