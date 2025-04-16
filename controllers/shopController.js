@@ -163,8 +163,38 @@ export async function getShop(req, res, next) {
 }
 export async function getAllShops(req, res, next) {
   try {
-    const shops = await Shop.find();
-    res.status(200).json({ success: true, data: shops });
+    // Extract query parameters
+    const { 
+      page = 1, 
+      limit = 10, 
+      sortBy = 'createdAt', 
+      sortOrder = 'desc',
+      fields,
+      ...filters 
+    } = req.query;
+
+    // Prepare options for the service
+    const options = {
+      filters,
+      sortBy,
+      sortOrder,
+      page: parseInt(page),
+      limit: parseInt(limit),
+      fields: fields ? fields.split(',') : []
+    };
+
+    // Get shops using the service
+    const result = await getShopsWithDetails(options);
+
+    res.status(200).json({ 
+      success: true, 
+      data: result.shops,
+      pagination: {
+        total: result.total,
+        page: result.page,
+        pages: result.pages
+      }
+    });
   } catch (err) {
     next(err);
   }

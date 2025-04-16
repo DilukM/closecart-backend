@@ -3,8 +3,45 @@ import Shop from "../models/shop.js";
 export async function getShopById(shopId) {
   return await Shop.findById(shopId);
 }
-export async function getAllShopsService() {
-  return await Shop.find();
+export async function getShopsWithDetails(options = {}) {
+  const {
+    filters = {},
+    sortBy = 'createdAt',
+    sortOrder = 'desc',
+    page = 1,
+    limit = 10,
+    fields = []
+  } = options;
+
+  // Build query
+  let query = Shop.find(filters);
+
+  // Apply sorting
+  const sortDirection = sortOrder === 'asc' ? 1 : -1;
+  const sortOptions = { [sortBy]: sortDirection };
+  query = query.sort(sortOptions);
+
+  // Apply pagination
+  const startIndex = (page - 1) * limit;
+  const totalShops = await Shop.countDocuments(filters);
+  query = query.skip(startIndex).limit(limit);
+
+  // Apply field selection if provided
+  if (fields.length > 0) {
+    const fieldSelection = fields.join(' ');
+    query = query.select(fieldSelection);
+  }
+
+  // Execute query
+  const shops = await query;
+
+  // Return shops with pagination metadata
+  return {
+    shops,
+    total: totalShops,
+    page: parseInt(page),
+    pages: Math.ceil(totalShops / limit)
+  };
 }
 
 export async function updateShop(shopId, updateData) {
