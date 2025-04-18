@@ -32,6 +32,7 @@ import shops from "./routes/shops.js";
 import offers from "./routes/offers.js";
 import location from "./routes/location.js";
 import consumer from "./routes/consumer.js";
+import categoryRoutes from "./routes/categoryRoutes.js";
 
 // Body parser
 app.use(_json());
@@ -54,6 +55,7 @@ app.use("/api/v1/shops", shops);
 app.use("/api/v1/offers", offers);
 app.use("/api/v1/location", location);
 app.use("/api/v1/consumer", consumer);
+app.use("/api/v1/categories", categoryRoutes);
 
 // WebSocket Connection
 io.on("connection", (socket) => {

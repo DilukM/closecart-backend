@@ -267,7 +267,7 @@ export const addLikedOffer = async (req, res, next) => {
 };
 
 export const deleteLikedOffer = async (req, res, next) => {
-  console.log("Deleting liked offer...", req.body.userId);
+  console.log("Deleting liked offer...", req.body);
   try {
     const user = await Consumer.findById(req.body.userId);
 
