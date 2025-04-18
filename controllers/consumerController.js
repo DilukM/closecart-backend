@@ -292,6 +292,7 @@ export const deleteLikedOffer = async (req, res, next) => {
 };
 
 export const getLikedShops = async (req, res, next) => {
+  console.log("User ID:", req.user.id); // Log the user ID for debugging
   try {
     const user = await Consumer.findById(req.user.id).populate("likedShops");
 
