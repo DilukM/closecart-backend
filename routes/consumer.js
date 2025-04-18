@@ -41,7 +41,7 @@ router.get("/liked-offers/:id", getLikedOffers);
 router.post("/liked-offers", addLikedOffer);
 router.delete("/liked-offers", deleteLikedOffer);
 
-router.get("/liked-shops", getLikedShops);
+router.get("/liked-shops/:id", getLikedShops);
 router.post("/liked-shops", addLikedShop);
 router.delete("/liked-shops/:id", deleteLikedShop);
 
