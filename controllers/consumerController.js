@@ -292,9 +292,8 @@ export const deleteLikedOffer = async (req, res, next) => {
 };
 
 export const getLikedShops = async (req, res, next) => {
-  console.log("User ID:", req.user.id); // Log the user ID for debugging
   try {
-    const user = await Consumer.findById(req.user.id).populate("likedShops");
+    const user = await Consumer.findById(req.params.id).populate("likedShops");
 
     if (!user) {
       return next(new ErrorResponse("User not found", 404));
