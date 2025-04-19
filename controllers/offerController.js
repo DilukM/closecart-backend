@@ -19,6 +19,22 @@ export async function getOffers(req, res, next) {
   }
 }
 
+export async function getOffer(req, res, next) {
+  try {
+    const offer = await Offer.findById(req.params.id);
+
+    if (!offer) {
+      return next(
+        new ErrorResponse(`Offer not found with id ${req.params.id}`, 404)
+      );
+    }
+
+    res.status(200).json({ success: true, data: offer });
+  } catch (err) {
+    next(err);
+  }
+}
+
 export async function createOffer(req, res, next) {
   console.log("Creating offer with data:", req.body);
   try {

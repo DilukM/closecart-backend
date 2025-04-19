@@ -4,6 +4,7 @@ import { protect } from "../middleware/auth.js";
 import {
   getOffers,
   getAllOffers,
+  getOffer,
   createOffer,
   updateOffer,
   deleteOffer,
@@ -38,6 +39,7 @@ router.route("/all").get(getAllOffers);
 
 router
   .route("/:id")
+  .get(getOffer)
   .put(protect, handleUpdateUpload, updateOffer)
   .delete(protect, deleteOffer);
 
