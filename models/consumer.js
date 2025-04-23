@@ -20,7 +20,6 @@ const ConsumerSchema = new Schema({
   phone: {
     type: String,
     unique: true,
-    
   },
   password: {
     type: String,
@@ -37,11 +36,10 @@ const ConsumerSchema = new Schema({
     type: String,
     enum: ["Male", "Female", "Other"],
     default: "Other",
-    
   },
   birthday: {
     type: Date,
-    
+
     default: Date.now,
   },
   favoriteShops: [

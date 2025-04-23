@@ -14,9 +14,29 @@ config();
 
 const app = express();
 const CCserver = http.createServer(app);
+
+// CORS configuration
+const corsOptions = {
+  origin: [
+    "https://www.closecartlk.com",
+    "https://closecartlk.com",
+    // Include other domains if needed
+    "http://localhost:3000" // For local development
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+
+// Apply CORS with options
+app.use(cors(corsOptions));
+
+// Configure Socket.io with the same CORS settings
 const io = new Server(CCserver, {
-  cors: { origin: "*" }, // Allow all origins
+  cors: corsOptions
 });
+
 app.use(_json());
 
 // Connect to database
@@ -45,9 +65,6 @@ app.use(helmet());
 
 // Prevent XSS attacks
 app.use(xss());
-
-// Enable CORS
-app.use(cors());
 
 // Mount routers
 app.use("/api/v1/auth", auth);
