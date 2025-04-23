@@ -20,7 +20,7 @@ const ConsumerSchema = new Schema({
   phone: {
     type: String,
     unique: true,
-    required: [true, "Please add a phone number"],
+    
   },
   password: {
     type: String,
@@ -37,11 +37,11 @@ const ConsumerSchema = new Schema({
     type: String,
     enum: ["Male", "Female", "Other"],
     default: "Other",
-    required: [true, "Please select a gender"],
+    
   },
   birthday: {
     type: Date,
-    required: [true, "Please add a birthday"],
+    
     default: Date.now,
   },
   favoriteShops: [
