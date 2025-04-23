@@ -2,6 +2,7 @@ import express from "express";
 import {
   signUp,
   signIn,
+  googleSignIn,
   getAllProfiles,
   getProfile,
   changePassword,
@@ -29,6 +30,7 @@ router.get("/liked-shops/:id", protect, getLikedShops);
 
 router.post("/signup", signUp);
 router.post("/signin", signIn);
+router.post("/google-signin", googleSignIn);
 router.put("/change-password", protect, changePassword);
 router.post("/forgot-password", forgotPassword);
 router.put("/update-profile/:id", protect, updateProfile);

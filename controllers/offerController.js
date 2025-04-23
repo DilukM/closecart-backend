@@ -38,16 +38,15 @@ export async function getOffer(req, res, next) {
 export async function createOffer(req, res, next) {
   console.log("Creating offer with data:", req.body);
   try {
-    
     // Set the shop from the authenticated user
     req.body.shop = req.user.shop;
 
-     // Parse tags if they're a string
-     if (req.body.tags && typeof req.body.tags === 'string') {
+    // Parse tags if they're a string
+    if (req.body.tags && typeof req.body.tags === "string") {
       try {
         req.body.tags = JSON.parse(req.body.tags);
       } catch (error) {
-        console.error('Error parsing tags:', error);
+        console.error("Error parsing tags:", error);
         req.body.tags = [];
       }
     }

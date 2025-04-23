@@ -28,6 +28,11 @@ const ConsumerSchema = new Schema({
     minlength: 6,
     select: false,
   },
+  googleId: {
+    type: String,
+    unique: true,
+    sparse: true, // This allows multiple documents to have null/undefined values
+  },
   gender: {
     type: String,
     enum: ["Male", "Female", "Other"],

@@ -53,6 +53,43 @@ export const signIn = async (req, res, next) => {
   }
 };
 
+export const googleSignIn = async (req, res, next) => {
+  try {
+    const { email, name, googleId, imageUrl } = req.body;
+
+    if (!email || !googleId) {
+      return next(
+        new ErrorResponse("Please provide email and googleId", 400)
+      );
+    }
+
+    // Check if user exists
+    let user = await Consumer.findOne({ email });
+
+    if (!user) {
+      // Create new user if they don't exist
+      user = await Consumer.create({
+        name,
+        email,
+        googleId,
+        imageUrl,
+        password: Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8), // Generate random password
+      });
+    } else {
+      // Update the googleId if it doesn't exist
+      if (!user.googleId) {
+        user.googleId = googleId;
+        if (imageUrl) user.imageUrl = imageUrl;
+        await user.save();
+      }
+    }
+
+    sendTokenResponse(user, 200, res);
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const getAllProfiles = async (req, res, next) => {
   try {
     const users = await Consumer.find();
