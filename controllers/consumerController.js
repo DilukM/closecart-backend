@@ -55,9 +55,11 @@ export const signIn = async (req, res, next) => {
 
 export const googleSignIn = async (req, res, next) => {
   try {
+    console.log("Google sign-in attempt", { email: req.body.email });
     const { email, name, googleId, imageUrl } = req.body;
 
     if (!email || !googleId) {
+      console.log("Google sign-in failed: Missing required fields");
       return next(
         new ErrorResponse("Please provide email and googleId", 400)
       );
@@ -65,8 +67,9 @@ export const googleSignIn = async (req, res, next) => {
 
     // Check if user exists
     let user = await Consumer.findOne({ email });
-
+    
     if (!user) {
+      console.log("Google sign-in: Creating new user", { email });
       // Create new user if they don't exist
       user = await Consumer.create({
         name,
@@ -75,17 +78,23 @@ export const googleSignIn = async (req, res, next) => {
         imageUrl,
         password: Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8), // Generate random password
       });
+      console.log("Google sign-in: New user created successfully", { userId: user._id });
     } else {
+      console.log("Google sign-in: Existing user found", { userId: user._id });
       // Update the googleId if it doesn't exist
       if (!user.googleId) {
+        console.log("Google sign-in: Updating user with googleId");
         user.googleId = googleId;
         if (imageUrl) user.imageUrl = imageUrl;
         await user.save();
+        console.log("Google sign-in: User updated successfully");
       }
     }
 
+    console.log("Google sign-in successful", { userId: user._id });
     sendTokenResponse(user, 200, res);
   } catch (err) {
+    console.error("Google sign-in error:", err.message);
     next(err);
   }
 };
