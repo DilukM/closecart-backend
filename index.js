@@ -20,8 +20,9 @@ const corsOptions = {
   origin: [
     "https://www.closecartlk.com",
     "https://closecartlk.com",
-    "https://www.mercant.closecartlk.com",
-    "https://mercant.closecartlk.com",
+    "https://www.merchant.closecartlk.com",
+    "https://merchant.closecartlk.com",
+
     // Include other domains if needed
     "http://localhost:3000", // For local development
   ],
