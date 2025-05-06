@@ -22,8 +22,11 @@ const corsOptions = {
     "https://closecartlk.com",
     "https://www.merchant.closecartlk.com",
     "https://merchant.closecartlk.com",
+    "http://www.closecartlk.com",
+    "http://closecartlk.com",
+    "http://www.merchant.closecartlk.com",
+    "http://merchant.closecartlk.com",
 
-    // Include other domains if needed
     "http://localhost:3000", // For local development
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
