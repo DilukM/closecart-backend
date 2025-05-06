@@ -20,13 +20,15 @@ const corsOptions = {
   origin: [
     "https://www.closecartlk.com",
     "https://closecartlk.com",
+    "https://www.mercant.closecartlk.com",
+    "https://mercant.closecartlk.com",
     // Include other domains if needed
-    "http://localhost:3000" // For local development
+    "http://localhost:3000", // For local development
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
-  optionsSuccessStatus: 200
+  optionsSuccessStatus: 200,
 };
 
 // Apply CORS with options
@@ -34,7 +36,7 @@ app.use(cors(corsOptions));
 
 // Configure Socket.io with the same CORS settings
 const io = new Server(CCserver, {
-  cors: corsOptions
+  cors: corsOptions,
 });
 
 app.use(_json());
