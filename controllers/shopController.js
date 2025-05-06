@@ -203,7 +203,7 @@ export async function updateShop(req, res, next) {
 export async function updateShopLocation(req, res, next) {
   try {
     // Check if location data is provided
-    if (!req.body.location.coordinates) {
+    if (!req.body.location.lat || !req.body.location.lng) {
       return next(
         new ErrorResponse("Please provide longitude and latitude", 400)
       );
