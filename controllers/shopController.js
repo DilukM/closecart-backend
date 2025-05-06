@@ -223,8 +223,23 @@ export async function updateShopLocation(req, res, next) {
       return next(new ErrorResponse("Not authorized to update this shop", 403));
     }
 
+    // Transform frontend location format to GeoJSON Point format
+    const transformedData = {
+      address: req.body.address,
+      location: {
+        type: "Point",
+        coordinates: [req.body.location.lng, req.body.location.lat],
+      },
+      // Copy any other fields that might be in req.body
+      ...Object.fromEntries(
+        Object.entries(req.body).filter(
+          ([key]) => !["location", "address"].includes(key)
+        )
+      ),
+    };
+
     // Update just the location
-    shop = await updateShopService(req.params.shopId, req.body);
+    shop = await updateShopService(req.params.shopId, transformedData);
 
     res.status(200).json({
       success: true,
