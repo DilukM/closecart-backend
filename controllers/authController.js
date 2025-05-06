@@ -9,9 +9,13 @@ const sendTokenResponse = (user, statusCode, res) => {
 
 export async function register(req, res, next) {
   try {
-    const { email, password, shopName, phone, shopAddress } = req.body;
+    const { email, password, shopName, phone, shopAddress, category } = req.body;
 
-    const shop = await Shop.create({ name: shopName, address: shopAddress });
+    const shop = await Shop.create({
+      name: shopName,
+      address: shopAddress,
+      category: category,
+    });
     const user = await User.create({ email, password, phone, shop: shop._id });
 
     sendTokenResponse(user, 201, res);

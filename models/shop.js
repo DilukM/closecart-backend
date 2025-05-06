@@ -40,7 +40,6 @@ const ShopSchema = new Schema({
     },
     coordinates: {
       type: [Number],
-
       index: "2dsphere",
     },
   },
