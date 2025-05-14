@@ -59,6 +59,7 @@ import offers from "./routes/offers.js";
 import location from "./routes/location.js";
 import consumer from "./routes/consumer.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
+import geocodingRoutes from "./routes/geocodingRoutes.js";
 
 // Body parser
 app.use(_json());
@@ -79,6 +80,7 @@ app.use("/api/v1/offers", offers);
 app.use("/api/v1/location", location);
 app.use("/api/v1/consumer", consumer);
 app.use("/api/v1/categories", categoryRoutes);
+app.use("/api/v1/geocoding", geocodingRoutes);
 
 // WebSocket Connection
 io.on("connection", (socket) => {
