@@ -11,8 +11,8 @@ import {
   uploadShopLogo,updateShopImages,
 } from "../controllers/shopController.js";
 
-router.route("/:shopId").get(protect, getShop).put(protect, updateShop);
-router.route("/").get(protect, getAllShops);
+router.route("/:shopId").get(getShop).put(protect, updateShop);
+router.route("/").get(getAllShops);
 
 router.route("/:shopId/location").put(protect, updateShopLocation);
 router.route("/:shopId/business-hours").put(protect, updateShopBusinessHours);
