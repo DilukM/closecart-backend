@@ -1,28 +1,53 @@
-import {
-  find,
-  create,
-  findByIdAndUpdate,
-  findByIdAndDelete,
-} from "../models/offer.js";
+import Offer from "../models/offer.js";
 
 export async function getShopOffers(shopId) {
-  return await find({ shop: shopId });
+  return await Offer.find({ shop: shopId });
 }
+
 export async function getAllOffers() {
-  return await find();
+  return await Offer.find();
 }
 
 export async function createOffer(offerData) {
-  return await create(offerData);
+  return await Offer.create(offerData);
 }
 
 export async function updateOffer(offerId, updateData) {
-  return await findByIdAndUpdate(offerId, updateData, {
+  return await Offer.findByIdAndUpdate(offerId, updateData, {
     new: true,
     runValidators: true,
   });
 }
 
 export async function deleteOffer(offerId) {
-  return await findByIdAndDelete(offerId);
+  return await Offer.findByIdAndDelete(offerId);
+}
+
+export async function getRecommendedOffers(queryParams) {
+  const filter = {};
+
+  // Add category filter if provided
+  if (queryParams.category) {
+    filter.category = queryParams.category;
+  }
+
+  // Add tags filter if provided
+  if (queryParams.tags) {
+    // Handle both single tag and array of tags
+    const tags = Array.isArray(queryParams.tags)
+      ? queryParams.tags
+      : [queryParams.tags];
+    filter.tags = { $in: tags };
+  }
+
+  // Exclude the current offer if provided
+  if (queryParams.exclude) {
+    filter._id = { $ne: queryParams.exclude };
+  }
+
+  // Parse limit parameter or use default
+  const limit = queryParams.limit ? parseInt(queryParams.limit, 10) : 4;
+
+  // Execute query with filters and limit
+  return await Offer.find(filter).limit(limit);
 }

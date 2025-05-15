@@ -1,5 +1,6 @@
 import ErrorResponse from "../utils/errorResponse.js";
 import Offer from "../models/offer.js";
+import * as offerService from "../services/offerService.js";
 
 export async function getAllOffers(req, res, next) {
   try {
@@ -126,6 +127,30 @@ export async function deleteOffer(req, res, next) {
     await Offer.findByIdAndDelete(req.params.id);
     res.status(200).json({ success: true, data: {} });
   } catch (err) {
+    next(err);
+  }
+}
+
+export async function getRecommendedOffers(req, res, next) {
+  try {
+    const queryParams = {
+      category: req.query.category,
+      tags: req.query.tags,
+      exclude: req.query.exclude,
+      limit: req.query.limit,
+    };
+
+    const recommendedOffers = await offerService.getRecommendedOffers(
+      queryParams
+    );
+
+    res.status(200).json({
+      success: true,
+      count: recommendedOffers.length,
+      data: recommendedOffers,
+    });
+  } catch (err) {
+    console.error("Error fetching recommended offers:", err);
     next(err);
   }
 }

@@ -8,6 +8,7 @@ import {
   createOffer,
   updateOffer,
   deleteOffer,
+  getRecommendedOffers,
 } from "../controllers/offerController.js";
 import { createUploadMiddleware } from "../config/cloudinary.js";
 
@@ -29,6 +30,9 @@ const logRequestBody = (req, res, next) => {
   console.log("Request File:", req.file);
   next();
 };
+
+// Route for recommended offers
+router.route("/recommended").get(getRecommendedOffers);
 
 // Apply routes with middleware
 router
