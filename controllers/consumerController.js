@@ -372,6 +372,7 @@ export const addLikedShop = async (req, res, next) => {
 };
 
 export const deleteLikedShop = async (req, res, next) => {
+  console.log("Deleting liked shop...", req.body);
   try {
     const user = await Consumer.findById(req.body.userId);
 
