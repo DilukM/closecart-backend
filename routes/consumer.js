@@ -26,7 +26,7 @@ import {
 import { protect } from "../middleware/auth.js";
 
 const router = express.Router();
-router.get("/liked-shops/:id", protect, getLikedShops);
+
 
 router.post("/signup", signUp);
 router.post("/signin", signIn);
@@ -37,8 +37,9 @@ router.put("/update-profile/:id", protect, updateProfile);
 router.post("/upload-image/:id", protect, uploadProfileImage);
 router.delete("/delete-profile", protect, deleteProfile);
 
-router.post("/liked-shops", addLikedShop);
-router.delete("/liked-shops/:id", deleteLikedShop);
+router.get("/liked-shops/:id", protect, getLikedShops);
+router.post("/liked-shops/:shopId", protect,addLikedShop);
+router.delete("/liked-shops/:id", protect,deleteLikedShop);
 
 router.get("/", getAllProfiles);
 router.get("/:id", getProfile);

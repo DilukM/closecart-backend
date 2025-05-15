@@ -13,6 +13,8 @@ import {
   updateShopImages as updateShopImagesService,
 } from "../services/shopService.js";
 
+import Offer from "../models/offer.js";
+
 // Configure Cloudinary (if not already configured)
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -189,6 +191,15 @@ export async function getShop(req, res, next) {
     }
 
     res.status(200).json({ success: true, data: shop });
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function getOffers(req, res, next) {
+  try {
+    const offers = await Offer.find({ shop: req.params.shopId });
+    res.status(200).json({ success: true, data: offers });
   } catch (err) {
     next(err);
   }

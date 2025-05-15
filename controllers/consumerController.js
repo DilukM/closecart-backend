@@ -351,7 +351,7 @@ export const addLikedShop = async (req, res, next) => {
       return next(new ErrorResponse("User not found", 404));
     }
 
-    const shopId = req.body.shopId;
+    const shopId = req.params.shopId;
 
     if (!shopId) {
       return next(new ErrorResponse("Please provide a shop ID", 400));
