@@ -345,7 +345,7 @@ export const getLikedShops = async (req, res, next) => {
 
 export const addLikedShop = async (req, res, next) => {
   try {
-    const user = await Consumer.findById(req.user.id);
+    const user = await Consumer.findById(req.user._id);
 
     if (!user) {
       return next(new ErrorResponse("User not found", 404));
