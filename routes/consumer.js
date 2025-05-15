@@ -38,8 +38,8 @@ router.post("/upload-image/:id", protect, uploadProfileImage);
 router.delete("/delete-profile", protect, deleteProfile);
 
 router.get("/liked-shops/:id", protect, getLikedShops);
-router.post("/liked-shops/:shopId", protect,addLikedShop);
-router.delete("/liked-shops/:id", protect,deleteLikedShop);
+router.post("/liked-shops", protect,addLikedShop);
+router.delete("/liked-shops", protect,deleteLikedShop);
 
 router.get("/", getAllProfiles);
 router.get("/:id", getProfile);

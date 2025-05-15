@@ -344,14 +344,15 @@ export const getLikedShops = async (req, res, next) => {
 };
 
 export const addLikedShop = async (req, res, next) => {
+
   try {
-    const user = await Consumer.findById(req.user._id);
+    const user = await Consumer.findById(req.body.userId);
 
     if (!user) {
       return next(new ErrorResponse("User not found", 404));
     }
 
-    const shopId = req.params.shopId;
+    const shopId = req.body.shopId;
 
     if (!shopId) {
       return next(new ErrorResponse("Please provide a shop ID", 400));
@@ -372,13 +373,13 @@ export const addLikedShop = async (req, res, next) => {
 
 export const deleteLikedShop = async (req, res, next) => {
   try {
-    const user = await Consumer.findById(req.user.id);
+    const user = await Consumer.findById(req.body.userId);
 
     if (!user) {
       return next(new ErrorResponse("User not found", 404));
     }
 
-    const shopId = req.params.id;
+    const shopId = req.body.shopId;
 
     if (!user.likedShops.includes(shopId)) {
       return next(new ErrorResponse("Shop not found in liked shops", 404));
