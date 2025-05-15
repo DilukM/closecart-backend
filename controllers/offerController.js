@@ -131,7 +131,7 @@ export async function deleteOffer(req, res, next) {
   }
 }
 
-export async function getRecommendedOffers(req, res, next) {
+export async function getRelatedOffers(req, res, next) {
   try {
     const queryParams = {
       category: req.query.category,
@@ -140,7 +140,7 @@ export async function getRecommendedOffers(req, res, next) {
       limit: req.query.limit,
     };
 
-    const recommendedOffers = await offerService.getRecommendedOffers(
+    const recommendedOffers = await offerService.getRelatedOffers(
       queryParams
     );
 
