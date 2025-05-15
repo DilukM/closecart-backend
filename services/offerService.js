@@ -42,11 +42,18 @@ export async function getRelatedOffers(queryParams) {
 
   // Exclude the current offer if provided
   if (queryParams.exclude) {
+    // Use Mongoose's ObjectId for proper comparison
     filter._id = { $ne: queryParams.exclude };
   }
 
+  // Exclude expired offers - where end date is in the past
+  const currentDate = new Date();
+  filter.endDate = { $gt: currentDate };
+
   // Parse limit parameter or use default
   const limit = queryParams.limit ? parseInt(queryParams.limit, 10) : 4;
+
+  console.log("Finding related offers with filter:", filter); // Add logging to debug
 
   // Execute query with filters and limit
   return await Offer.find(filter).limit(limit);

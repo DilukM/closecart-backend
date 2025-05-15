@@ -1,6 +1,7 @@
 import ErrorResponse from "../utils/errorResponse.js";
 import Offer from "../models/offer.js";
 import * as offerService from "../services/offerService.js";
+import mongoose from "mongoose";
 
 export async function getAllOffers(req, res, next) {
   try {
@@ -136,21 +137,22 @@ export async function getRelatedOffers(req, res, next) {
     const queryParams = {
       category: req.query.category,
       tags: req.query.tags,
-      exclude: req.query.exclude,
+      // Convert exclude parameter to a valid ObjectId if it's provided
+      exclude: req.query.exclude ? req.query.exclude : undefined,
       limit: req.query.limit,
     };
 
-    const recommendedOffers = await offerService.getRelatedOffers(
-      queryParams
-    );
+    console.log("Related offers query params:", queryParams); // Add debugging
+
+    const relatedOffers = await offerService.getRelatedOffers(queryParams);
 
     res.status(200).json({
       success: true,
-      count: recommendedOffers.length,
-      data: recommendedOffers,
+      count: relatedOffers.length,
+      data: relatedOffers,
     });
   } catch (err) {
-    console.error("Error fetching recommended offers:", err);
+    console.error("Error fetching related offers:", err);
     next(err);
   }
 }
