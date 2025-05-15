@@ -23,7 +23,7 @@ export async function deleteOffer(offerId) {
   return await Offer.findByIdAndDelete(offerId);
 }
 
-export async function getRecommendedOffers(queryParams) {
+export async function getRelatedOffers(queryParams) {
   const filter = {};
 
   // Add category filter if provided
