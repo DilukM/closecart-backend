@@ -178,6 +178,7 @@ export async function uploadShopCoverImage(req, res, next) {
 }
 
 export async function getShop(req, res, next) {
+  console.log("[ShopController] getShop called", req.params.shopId);
   try {
     const shop = await getShopById(req.params.shopId);
 
@@ -185,10 +186,6 @@ export async function getShop(req, res, next) {
       return next(
         new ErrorResponse(`Shop not found with id ${req.params.shopId}`, 404)
       );
-    }
-
-    if (shop._id.toString() !== req.user.shop.toString()) {
-      return next(new ErrorResponse("Not authorized to access this shop", 403));
     }
 
     res.status(200).json({ success: true, data: shop });
