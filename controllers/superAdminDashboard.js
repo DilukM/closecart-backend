@@ -11,7 +11,6 @@ import { Readable } from "stream";
 // @access  Private (SuperAdmin only)
 export const createShop = asyncHandler(async (req, res, next) => {
   // Add the superadmin id to req.body
-  
 
   const shop = await Shop.create(req.body);
 
@@ -82,7 +81,6 @@ export const deleteShop = asyncHandler(async (req, res, next) => {
 // @access  Private (SuperAdmin only)
 export const createOffer = asyncHandler(async (req, res, next) => {
   // Add the superadmin id to req.body
- 
 
   const offer = await Offer.create(req.body);
 
@@ -175,7 +173,7 @@ export const importFromCSV = asyncHandler(async (req, res, next) => {
   let createdShopsCount = 0;
   let createdOffersCount = 0;
   const BATCH_SIZE = 50; // Process 50 records at a time
-  
+
   const bufferStream = Readable.from(csvFile.data.toString());
 
   bufferStream
@@ -188,46 +186,51 @@ export const importFromCSV = asyncHandler(async (req, res, next) => {
           const batch = results.slice(i, i + BATCH_SIZE);
           const shopPromises = [];
           const offerPromises = [];
-          
+
           for (const row of batch) {
             // Process shop
             let shop = shopMap.get(row.shop);
-            
+
             if (!shop) {
               shop = await Shop.findOne({ name: row.shop });
-              
+
               if (!shop) {
                 const shopData = {
                   name: row.shop,
                   address: row.address,
                   phone: row.phone,
-                  category: row.shop_category || row.category || 'Uncategorized',
+                  category:
+                    row.shop_category || row.category || "Uncategorized",
                 };
-                
-                const shopPromise = Shop.create(shopData).then(newShop => {
+
+                const shopPromise = Shop.create(shopData).then((newShop) => {
                   shopMap.set(row.shop, newShop);
                   createdShopsCount++;
                   return newShop;
                 });
-                
+
                 shopPromises.push(shopPromise);
               } else {
                 shopMap.set(row.shop, shop);
               }
             }
           }
-          
+
           // Wait for all shop creations to complete in this batch
           await Promise.all(shopPromises);
-          
+
           // Process offers after shops are created
           for (const row of batch) {
             const shop = shopMap.get(row.shop);
-            
+
             if (shop) {
-              const startDate = new Date(row.start_date.split("/").reverse().join("-"));
-              const endDate = new Date(row.end_date.split("/").reverse().join("-"));
-              
+              const startDate = new Date(
+                row.start_date.split("/").reverse().join("-")
+              );
+              const endDate = new Date(
+                row.end_date.split("/").reverse().join("-")
+              );
+
               const offerData = {
                 title: row.title,
                 imageUrl: row.image_url,
@@ -239,23 +242,25 @@ export const importFromCSV = asyncHandler(async (req, res, next) => {
                 shop: shop._id,
                 offerUrl: row.offer_url,
               };
-              
+
               const offerPromise = Offer.create(offerData).then(() => {
                 createdOffersCount++;
               });
-              
+
               offerPromises.push(offerPromise);
             }
           }
-          
+
           // Wait for all offer creations to complete in this batch
           await Promise.all(offerPromises);
-          
+
           // Give a small breathing room for the server
-          await new Promise(resolve => setTimeout(resolve, 100));
+          await new Promise((resolve) => setTimeout(resolve, 100));
         }
-        
-        console.log(`CSV import completed: ${createdShopsCount} shops and ${createdOffersCount} offers created`);
+
+        console.log(
+          `CSV import completed: ${createdShopsCount} shops and ${createdOffersCount} offers created`
+        );
       } catch (err) {
         console.error(`Error processing CSV: ${err.message}`);
       }

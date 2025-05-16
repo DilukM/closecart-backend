@@ -58,3 +58,25 @@ export async function getRelatedOffers(queryParams) {
   // Execute query with filters and limit
   return await Offer.find(filter).limit(limit);
 }
+
+/**
+ * Increment offer clicks
+ * @param {string} offerId - The ID of the offer
+ * @returns {Promise<Object>} - Updated offer object
+ */
+export async function incrementOfferClicks(offerId) {
+  return await Offer.findByIdAndUpdate(
+    offerId,
+    { $inc: { clicks: 1 } },
+    { new: true }
+  ).select('clicks');
+}
+
+/**
+ * Get offer metrics (clicks)
+ * @param {string} offerId - The ID of the offer
+ * @returns {Promise<Object>} - Offer metrics object
+ */
+export async function getOfferMetrics(offerId) {
+  return await Offer.findById(offerId).select('clicks title');
+}

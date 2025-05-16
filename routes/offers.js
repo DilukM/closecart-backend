@@ -9,6 +9,8 @@ import {
   updateOffer,
   deleteOffer,
   getRelatedOffers,
+  recordOfferClick,
+  getOfferMetricsController,
 } from "../controllers/offerController.js";
 import { createUploadMiddleware } from "../config/cloudinary.js";
 
@@ -46,5 +48,9 @@ router
   .get(getOffer)
   .put(protect, handleUpdateUpload, updateOffer)
   .delete(protect, deleteOffer);
+
+// Public metrics routes - no protection needed
+router.route("/:id/clicks").post(recordOfferClick);
+router.route("/:id/metrics").get(getOfferMetricsController);
 
 export default router;

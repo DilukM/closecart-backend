@@ -11,6 +11,9 @@ import {
   updateShop as updateShopService,
   updateShopBusinessHours as updateShopBusinessHoursService,
   updateShopImages as updateShopImagesService,
+  incrementShopClicks,
+  incrementShopVisits,
+  getShopMetrics,
 } from "../services/shopService.js";
 
 import Offer from "../models/offer.js";
@@ -401,6 +404,82 @@ export async function updateShopImages(req, res, next) {
           logo: shop.logo,
           coverImage: shop.coverImage,
         },
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+/**
+ * @desc    Increment shop clicks
+ * @route   POST /api/shops/:shopId/clicks
+ * @access  Public
+ */
+export async function recordShopClick(req, res, next) {
+  try {
+    const shop = await incrementShopClicks(req.params.shopId);
+
+    if (!shop) {
+      return next(
+        new ErrorResponse(`Shop not found with id ${req.params.shopId}`, 404)
+      );
+    }
+
+    res.status(200).json({
+      success: true,
+      data: { clicks: shop.clicks },
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+/**
+ * @desc    Increment shop visits
+ * @route   POST /api/shops/:shopId/visits
+ * @access  Public
+ */
+export async function recordShopVisit(req, res, next) {
+  try {
+    const shop = await incrementShopVisits(req.params.shopId);
+
+    if (!shop) {
+      return next(
+        new ErrorResponse(`Shop not found with id ${req.params.shopId}`, 404)
+      );
+    }
+
+    res.status(200).json({
+      success: true,
+      data: { visits: shop.visits },
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+/**
+ * @desc    Get shop metrics (clicks and visits)
+ * @route   GET /api/shops/:shopId/metrics
+ * @access  Public
+ */
+export async function getShopMetricsController(req, res, next) {
+  try {
+    const metrics = await getShopMetrics(req.params.shopId);
+
+    if (!metrics) {
+      return next(
+        new ErrorResponse(`Shop not found with id ${req.params.shopId}`, 404)
+      );
+    }
+
+    res.status(200).json({
+      success: true,
+      data: {
+        name: metrics.name,
+        clicks: metrics.clicks,
+        visits: metrics.visits,
       },
     });
   } catch (err) {

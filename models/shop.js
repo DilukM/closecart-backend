@@ -95,6 +95,14 @@ const ShopSchema = new Schema({
       isOpen: { type: Boolean, default: false },
     },
   },
+  clicks: {
+    type: Number,
+    default: 0,
+  },
+  visits: {
+    type: Number,
+    default: 0,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

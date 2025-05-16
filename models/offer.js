@@ -46,6 +46,10 @@ const OfferSchema = new Schema({
     type: String,
     required: [true, "Please add an image URL"],
   },
+  clicks: {
+    type: Number,
+    default: 0,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

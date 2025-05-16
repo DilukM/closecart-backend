@@ -156,3 +156,56 @@ export async function getRelatedOffers(req, res, next) {
     next(err);
   }
 }
+
+/**
+ * @desc    Increment offer clicks
+ * @route   POST /api/offers/:id/clicks
+ * @access  Public
+ */
+export async function recordOfferClick(req, res, next) {
+  try {
+    const offer = await offerService.incrementOfferClicks(req.params.id);
+
+    if (!offer) {
+      return next(
+        new ErrorResponse(`Offer not found with id ${req.params.id}`, 404)
+      );
+    }
+
+    res.status(200).json({
+      success: true,
+      data: { clicks: offer.clicks },
+    });
+  } catch (err) {
+    console.error("Error recording offer click:", err);
+    next(err);
+  }
+}
+
+/**
+ * @desc    Get offer metrics (clicks)
+ * @route   GET /api/offers/:id/metrics
+ * @access  Public
+ */
+export async function getOfferMetricsController(req, res, next) {
+  try {
+    const metrics = await offerService.getOfferMetrics(req.params.id);
+
+    if (!metrics) {
+      return next(
+        new ErrorResponse(`Offer not found with id ${req.params.id}`, 404)
+      );
+    }
+
+    res.status(200).json({
+      success: true,
+      data: {
+        title: metrics.title,
+        clicks: metrics.clicks,
+      },
+    });
+  } catch (err) {
+    console.error("Error getting offer metrics:", err);
+    next(err);
+  }
+}

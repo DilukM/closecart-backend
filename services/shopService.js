@@ -118,3 +118,38 @@ export async function updateShopImages(shopId, imageData) {
 
   return shop;
 }
+
+/**
+ * Increment shop clicks
+ * @param {string} shopId - The ID of the shop 
+ * @returns {Promise<Object>} - Updated shop object
+ */
+export async function incrementShopClicks(shopId) {
+  return await Shop.findByIdAndUpdate(
+    shopId,
+    { $inc: { clicks: 1 } },
+    { new: true }
+  ).select('clicks');
+}
+
+/**
+ * Increment shop visits
+ * @param {string} shopId - The ID of the shop
+ * @returns {Promise<Object>} - Updated shop object
+ */
+export async function incrementShopVisits(shopId) {
+  return await Shop.findByIdAndUpdate(
+    shopId,
+    { $inc: { visits: 1 } },
+    { new: true }
+  ).select('visits');
+}
+
+/**
+ * Get shop metrics (clicks and visits)
+ * @param {string} shopId - The ID of the shop
+ * @returns {Promise<Object>} - Shop metrics object
+ */
+export async function getShopMetrics(shopId) {
+  return await Shop.findById(shopId).select('clicks visits name');
+}
