@@ -60,6 +60,8 @@ import location from "./routes/location.js";
 import consumer from "./routes/consumer.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import geocodingRoutes from "./routes/geocodingRoutes.js";
+import superAdmin from "./routes/superAdmin.js";
+import superAdminDashboard from "./routes/superAdminDashboard.js";
 
 // Body parser
 app.use(_json());
@@ -81,6 +83,8 @@ app.use("/api/v1/location", location);
 app.use("/api/v1/consumer", consumer);
 app.use("/api/v1/categories", categoryRoutes);
 app.use("/api/v1/geocoding", geocodingRoutes);
+app.use("/api/v1/superadmin", superAdmin);
+app.use("/api/v1/superadmin/dashboard", superAdminDashboard);
 
 // WebSocket Connection
 io.on("connection", (socket) => {

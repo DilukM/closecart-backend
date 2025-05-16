@@ -22,6 +22,10 @@ const ShopSchema = new Schema({
     enum: [
       "Food",
       "Retail",
+      "Hotels & Accommodation",
+      "Travel & Transport",
+      "Banks",
+      "Online",
       "Services",
       "Entertainment",
       "Health",
