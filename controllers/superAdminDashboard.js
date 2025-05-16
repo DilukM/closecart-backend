@@ -152,7 +152,7 @@ export const deleteOffer = asyncHandler(async (req, res, next) => {
 // @access  Private (SuperAdmin only)
 export const importFromCSV = asyncHandler(async (req, res, next) => {
   console.log("Request received for CSV import");
-  console.log("Request files object:", req.files);
+  console.log("Request files object:", req);
 
   if (!req.files || !req.files.csv) {
     console.log("No CSV file found in the request");
