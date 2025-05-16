@@ -30,7 +30,7 @@ const ConsumerSchema = new Schema({
   googleId: {
     type: String,
 
-    sparse: true, // This allows multiple documents to have null/undefined values
+    sparse: true,
   },
   gender: {
     type: String,
