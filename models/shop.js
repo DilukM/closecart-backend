@@ -47,15 +47,12 @@ const ShopSchema = new Schema({
     type: Map,
     of: String,
     default: {},
-    // Example: { "facebook": "https://facebook.com/shopname", "instagram": "https://instagram.com/shopname" }
   },
   coverImage: {
     type: String,
-    default: "https://via.placeholder.com/1200x300",
   },
   logo: {
     type: String,
-    default: "https://via.placeholder.com/200x200",
   },
   businessHours: {
     monday: {
