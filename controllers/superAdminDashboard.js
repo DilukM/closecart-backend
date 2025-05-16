@@ -192,7 +192,7 @@ export const importFromCSV = asyncHandler(async (req, res, next) => {
                 name: row.shop,
                 address: row.address,
                 phone: row.phone,
-                
+                category: row.shop_category || row.category || 'Uncategorized', // Add category field
               });
               createdShops.push(shop);
             }
