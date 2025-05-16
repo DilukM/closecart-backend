@@ -8,6 +8,7 @@ import connectDB from "./config/db.js";
 import http from "http";
 import { Server } from "socket.io";
 import Logger from "./utils/logger.js";
+import fileUpload from "express-fileupload";
 
 // Load env vars
 config();
@@ -37,6 +38,8 @@ const corsOptions = {
 
 // Apply CORS with options
 app.use(cors(corsOptions));
+
+app.use(fileUpload());
 
 // Configure Socket.io with the same CORS settings
 const io = new Server(CCserver, {

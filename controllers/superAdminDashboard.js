@@ -151,24 +151,14 @@ export const deleteOffer = asyncHandler(async (req, res, next) => {
 // @route   POST /api/v1/superadmin/import/csv
 // @access  Private (SuperAdmin only)
 export const importFromCSV = asyncHandler(async (req, res, next) => {
-  console.log("Request received for CSV import");
-  console.log("Request files object:", req);
-
   if (!req.files || !req.files.csv) {
-    console.log("No CSV file found in the request");
     return next(new ErrorResponse("Please upload a CSV file", 400));
   }
 
   const csvFile = req.files.csv;
-  console.log("CSV file details:", {
-    name: csvFile.name,
-    size: csvFile.size,
-    mimetype: csvFile.mimetype,
-  });
 
   // Check if the file is CSV
   if (!csvFile.mimetype.includes("csv")) {
-    console.log("Invalid file type:", csvFile.mimetype);
     return next(new ErrorResponse("Please upload a CSV file", 400));
   }
 
@@ -177,20 +167,14 @@ export const importFromCSV = asyncHandler(async (req, res, next) => {
   const createdShops = [];
   const createdOffers = [];
 
-  console.log("Starting to parse CSV data...");
-
   // Create a readable stream from the uploaded file buffer
   const bufferStream = require("stream").Readable.from(csvFile.data.toString());
 
   // Parse the CSV data
   bufferStream
     .pipe(csv())
-    .on("data", (data) => {
-      console.log("Row parsed:", data.shop);
-      results.push(data);
-    })
+    .on("data", (data) => results.push(data))
     .on("end", async () => {
-      console.log(`CSV parsing complete. Found ${results.length} records`);
       try {
         // Process each row in the CSV
         for (const row of results) {
@@ -237,10 +221,6 @@ export const importFromCSV = asyncHandler(async (req, res, next) => {
           createdOffers.push(offer);
         }
 
-        console.log(
-          `Successfully created ${createdShops.length} shops and ${createdOffers.length} offers`
-        );
-
         res.status(201).json({
           success: true,
           data: {
@@ -250,14 +230,9 @@ export const importFromCSV = asyncHandler(async (req, res, next) => {
           },
         });
       } catch (err) {
-        console.error("Error processing CSV data:", err);
         return next(
           new ErrorResponse(`Error processing CSV: ${err.message}`, 500)
         );
       }
-    })
-    .on("error", (err) => {
-      console.error("CSV parsing error:", err);
-      return next(new ErrorResponse(`Error parsing CSV: ${err.message}`, 500));
     });
 });
