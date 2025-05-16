@@ -163,78 +163,101 @@ export const importFromCSV = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse("Please upload a CSV file", 400));
   }
 
-  const results = [];
-  const shopMap = new Map(); // To track shops we've already processed
-  const createdShops = [];
-  const createdOffers = [];
+  // Immediately send a response to avoid timeout
+  res.status(202).json({
+    success: true,
+    message: "CSV import started. Processing in the background.",
+  });
 
-  // Create a readable stream from the uploaded file buffer
+  // Process in background
+  const results = [];
+  const shopMap = new Map();
+  let createdShopsCount = 0;
+  let createdOffersCount = 0;
+  const BATCH_SIZE = 50; // Process 50 records at a time
+  
   const bufferStream = Readable.from(csvFile.data.toString());
 
-  // Parse the CSV data
   bufferStream
     .pipe(csv())
     .on("data", (data) => results.push(data))
     .on("end", async () => {
       try {
-        // Process each row in the CSV
-        for (const row of results) {
-          // First check if the shop exists in our map
-          let shop = shopMap.get(row.shop);
-
-          // If shop doesn't exist in our map, check the database
-          if (!shop) {
-            shop = await Shop.findOne({ name: row.shop });
-
-            // If shop doesn't exist in the database, create it
-            if (!shop) {
-              shop = await Shop.create({
-                name: row.shop,
-                address: row.address,
-                phone: row.phone,
-                category: row.shop_category || row.category || 'Uncategorized', // Add category field
-              });
-              createdShops.push(shop);
-            }
-
-            // Add shop to our map
-            shopMap.set(row.shop, shop);
-          }
-
-          // Create the offer linked to the shop
-          const startDate = new Date(
-            row.start_date.split("/").reverse().join("-")
-          );
-          const endDate = new Date(row.end_date.split("/").reverse().join("-"));
-
-          const offer = await Offer.create({
-            title: row.title,
-            imageUrl: row.image_url,
-            description: row.description,
-            startDate,
-            discount:15,
-            endDate,
-            category: row.category,
-            shop: shop._id,
-            offerUrl: row.offer_url,
+        // Process in batches
+        for (let i = 0; i < results.length; i += BATCH_SIZE) {
+          const batch = results.slice(i, i + BATCH_SIZE);
+          const shopPromises = [];
+          const offerPromises = [];
+          
+          for (const row of batch) {
+            // Process shop
+            let shop = shopMap.get(row.shop);
             
-          });
-
-          createdOffers.push(offer);
+            if (!shop) {
+              shop = await Shop.findOne({ name: row.shop });
+              
+              if (!shop) {
+                const shopData = {
+                  name: row.shop,
+                  address: row.address,
+                  phone: row.phone,
+                  category: row.shop_category || row.category || 'Uncategorized',
+                };
+                
+                const shopPromise = Shop.create(shopData).then(newShop => {
+                  shopMap.set(row.shop, newShop);
+                  createdShopsCount++;
+                  return newShop;
+                });
+                
+                shopPromises.push(shopPromise);
+              } else {
+                shopMap.set(row.shop, shop);
+              }
+            }
+          }
+          
+          // Wait for all shop creations to complete in this batch
+          await Promise.all(shopPromises);
+          
+          // Process offers after shops are created
+          for (const row of batch) {
+            const shop = shopMap.get(row.shop);
+            
+            if (shop) {
+              const startDate = new Date(row.start_date.split("/").reverse().join("-"));
+              const endDate = new Date(row.end_date.split("/").reverse().join("-"));
+              
+              const offerData = {
+                title: row.title,
+                imageUrl: row.image_url,
+                description: row.description,
+                startDate,
+                discount: row.discount || 15,
+                endDate,
+                category: row.category,
+                shop: shop._id,
+                offerUrl: row.offer_url,
+              };
+              
+              const offerPromise = Offer.create(offerData).then(() => {
+                createdOffersCount++;
+              });
+              
+              offerPromises.push(offerPromise);
+            }
+          }
+          
+          // Wait for all offer creations to complete in this batch
+          await Promise.all(offerPromises);
+          
+          // Give a small breathing room for the server
+          await new Promise(resolve => setTimeout(resolve, 100));
         }
-
-        res.status(201).json({
-          success: true,
-          data: {
-            shopsCreated: createdShops.length,
-            offersCreated: createdOffers.length,
-            message: `Successfully imported ${createdShops.length} shops and ${createdOffers.length} offers`,
-          },
-        });
+        
+        console.log(`CSV import completed: ${createdShopsCount} shops and ${createdOffersCount} offers created`);
       } catch (err) {
-        return next(
-          new ErrorResponse(`Error processing CSV: ${err.message}`, 500)
-        );
+        console.error(`Error processing CSV: ${err.message}`);
       }
     });
 });
