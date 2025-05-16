@@ -11,7 +11,7 @@ import { Readable } from "stream";
 // @access  Private (SuperAdmin only)
 export const createShop = asyncHandler(async (req, res, next) => {
   // Add the superadmin id to req.body
-  req.body.createdBy = req.user.id;
+  
 
   const shop = await Shop.create(req.body);
 
@@ -82,7 +82,7 @@ export const deleteShop = asyncHandler(async (req, res, next) => {
 // @access  Private (SuperAdmin only)
 export const createOffer = asyncHandler(async (req, res, next) => {
   // Add the superadmin id to req.body
-  req.body.createdBy = req.user.id;
+ 
 
   const offer = await Offer.create(req.body);
 
@@ -192,7 +192,7 @@ export const importFromCSV = asyncHandler(async (req, res, next) => {
                 name: row.shop,
                 address: row.address,
                 phone: row.phone,
-                createdBy: req.user.id,
+                
               });
               createdShops.push(shop);
             }
@@ -216,7 +216,7 @@ export const importFromCSV = asyncHandler(async (req, res, next) => {
             category: row.category,
             shop: shop._id,
             offerUrl: row.offer_url,
-            createdBy: req.user.id,
+            
           });
 
           createdOffers.push(offer);
