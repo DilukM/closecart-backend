@@ -212,6 +212,7 @@ export const importFromCSV = asyncHandler(async (req, res, next) => {
             imageUrl: row.image_url,
             description: row.description,
             startDate,
+            discount:15,
             endDate,
             category: row.category,
             shop: shop._id,
