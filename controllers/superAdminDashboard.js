@@ -4,6 +4,7 @@ import asyncHandler from "../middleware/async.js";
 import ErrorResponse from "../utils/errorResponse.js";
 import fs from "fs";
 import csv from "csv-parser";
+import { Readable } from "stream";
 
 // @desc    Create a shop
 // @route   POST /api/v1/superadmin/shops
@@ -168,7 +169,7 @@ export const importFromCSV = asyncHandler(async (req, res, next) => {
   const createdOffers = [];
 
   // Create a readable stream from the uploaded file buffer
-  const bufferStream = require("stream").Readable.from(csvFile.data.toString());
+  const bufferStream = Readable.from(csvFile.data.toString());
 
   // Parse the CSV data
   bufferStream
