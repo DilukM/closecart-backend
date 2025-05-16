@@ -54,6 +54,7 @@ export const signIn = async (req, res, next) => {
 };
 
 export const googleSignIn = async (req, res, next) => {
+
   try {
     const { email, name, googleId, imageUrl } = req.body;
 
@@ -344,7 +345,6 @@ export const getLikedShops = async (req, res, next) => {
 };
 
 export const addLikedShop = async (req, res, next) => {
-
   try {
     const user = await Consumer.findById(req.body.userId);
 

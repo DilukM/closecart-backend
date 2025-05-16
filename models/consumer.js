@@ -18,8 +18,7 @@ const ConsumerSchema = new Schema({
     ],
   },
   phone: {
-    type: String,
-    unique: true,
+    type: Number,
   },
   password: {
     type: String,
@@ -29,7 +28,7 @@ const ConsumerSchema = new Schema({
   },
   googleId: {
     type: String,
-
+    unique: true,
     sparse: true,
   },
   gender: {
