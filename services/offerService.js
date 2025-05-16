@@ -69,7 +69,7 @@ export async function incrementOfferClicks(offerId) {
     offerId,
     { $inc: { clicks: 1 } },
     { new: true }
-  ).select('clicks');
+  ).select("clicks");
 }
 
 /**
@@ -78,5 +78,5 @@ export async function incrementOfferClicks(offerId) {
  * @returns {Promise<Object>} - Offer metrics object
  */
 export async function getOfferMetrics(offerId) {
-  return await Offer.findById(offerId).select('clicks title');
+  return await Offer.findById(offerId).select("clicks title");
 }

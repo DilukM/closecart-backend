@@ -121,7 +121,7 @@ export async function updateShopImages(shopId, imageData) {
 
 /**
  * Increment shop clicks
- * @param {string} shopId - The ID of the shop 
+ * @param {string} shopId - The ID of the shop
  * @returns {Promise<Object>} - Updated shop object
  */
 export async function incrementShopClicks(shopId) {
@@ -129,7 +129,7 @@ export async function incrementShopClicks(shopId) {
     shopId,
     { $inc: { clicks: 1 } },
     { new: true }
-  ).select('clicks');
+  ).select("clicks");
 }
 
 /**
@@ -142,7 +142,7 @@ export async function incrementShopVisits(shopId) {
     shopId,
     { $inc: { visits: 1 } },
     { new: true }
-  ).select('visits');
+  ).select("visits");
 }
 
 /**
@@ -151,5 +151,5 @@ export async function incrementShopVisits(shopId) {
  * @returns {Promise<Object>} - Shop metrics object
  */
 export async function getShopMetrics(shopId) {
-  return await Shop.findById(shopId).select('clicks visits name');
+  return await Shop.findById(shopId).select("clicks visits name");
 }

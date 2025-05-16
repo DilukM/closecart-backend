@@ -13,7 +13,7 @@ import {
   updateShopImages,
   recordShopClick,
   recordShopVisit,
-  getShopMetricsController
+  getShopMetricsController,
 } from "../controllers/shopController.js";
 
 router.route("/:shopId").get(getShop).put(protect, updateShop);
