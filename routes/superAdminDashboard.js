@@ -15,7 +15,7 @@ import { protectSuperAdmin } from "../middleware/superAdminAuth.js";
 const router = express.Router();
 
 // Apply protection to all routes
-router.use(protectSuperAdmin);
+// router.use(protectSuperAdmin);
 
 // Shop routes
 router.route("/shops").get(getShops).post(createShop);
