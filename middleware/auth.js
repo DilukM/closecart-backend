@@ -10,7 +10,6 @@ export async function protect(req, res, next) {
     req.headers.authorization.startsWith("Bearer")
   ) {
     token = req.headers.authorization.split(" ")[1];
-   
   }
 
   if (!token) {
@@ -28,16 +27,18 @@ export async function protect(req, res, next) {
 
 export async function consumerProtect(req, res, next) {
   let token;
+  console.log("req.headers.authorization", req.headers.authorization);
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")
   ) {
     token = req.headers.authorization.split(" ")[1];
- 
   }
 
   if (!token) {
-    return next(new ErrorResponse("Not authorized to access this route", 401));
+    return next(
+      new ErrorResponse("Not authorized to access this route", 401)
+    );
   }
 
   try {
