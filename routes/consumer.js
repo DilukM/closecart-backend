@@ -39,7 +39,7 @@ router.delete("/delete-profile", protect, deleteProfile);
 router.get("/liked-shops/:id", protect, getLikedShops);
 router.post(
   "/liked-shops",
-  protect,
+
   (req, res, next) => {
     console.log("------------------------------------");
     console.log(`POST request to /liked-shops at ${new Date().toISOString()}`);
@@ -48,6 +48,7 @@ router.post(
     console.log("------------------------------------");
     next();
   },
+  protect,
   addLikedShop
 );
 router.delete("/liked-shops", protect, deleteLikedShop);
