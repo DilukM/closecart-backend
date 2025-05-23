@@ -23,22 +23,22 @@ import {
   addInterestedCategory,
   deleteInterestedCategory,
 } from "../controllers/consumerController.js";
-import { protect } from "../middleware/auth.js";
+import { consumerProtect } from "../middleware/auth.js";
 
 const router = express.Router();
 
 router.post("/signup", signUp);
 router.post("/signin", signIn);
 router.post("/google-signin", googleSignIn);
-router.put("/change-password", protect, changePassword);
+router.put("/change-password", consumerProtect, changePassword);
 router.post("/forgot-password", forgotPassword);
-router.put("/update-profile/:id", protect, updateProfile);
-router.post("/upload-image/:id", protect, uploadProfileImage);
-router.delete("/delete-profile", protect, deleteProfile);
+router.put("/update-profile/:id", consumerProtect, updateProfile);
+router.post("/upload-image/:id", consumerProtect, uploadProfileImage);
+router.delete("/delete-profile", consumerProtect, deleteProfile);
 
-router.get("/liked-shops/:id", protect, getLikedShops);
-router.post("/liked-shops", protect, addLikedShop);
-router.delete("/liked-shops", protect, deleteLikedShop);
+router.get("/liked-shops/:id", consumerProtect, getLikedShops);
+router.post("/liked-shops", consumerProtect, addLikedShop);
+router.delete("/liked-shops", consumerProtect, deleteLikedShop);
 
 router.get("/", getAllProfiles);
 router.get("/:id", getProfile);
