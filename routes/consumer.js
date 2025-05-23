@@ -43,7 +43,7 @@ router.post(
   (req, res, next) => {
     console.log("------------------------------------");
     console.log(`POST request to /liked-shops at ${new Date().toISOString()}`);
-    console.log("Request body:", req.body);
+    console.log("Request body:", req.headers);
     console.log("User:", req.user);
     console.log("------------------------------------");
     next();
