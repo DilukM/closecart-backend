@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import ErrorResponse from "../utils/errorResponse.js";
 import User from "../models/user.js";
+import Consumer from "../models/consumer.js";
 
 export async function protect(req, res, next) {
   let token;
