@@ -37,20 +37,7 @@ router.post("/upload-image/:id", protect, uploadProfileImage);
 router.delete("/delete-profile", protect, deleteProfile);
 
 router.get("/liked-shops/:id", protect, getLikedShops);
-router.post(
-  "/liked-shops",
-
-  (req, res, next) => {
-    console.log("------------------------------------");
-    console.log(`POST request to /liked-shops at ${new Date().toISOString()}`);
-    console.log("Request body:", req.headers);
-    console.log("User:", req.user);
-    console.log("------------------------------------");
-    next();
-  },
-  protect,
-  addLikedShop
-);
+router.post("/liked-shops", protect, addLikedShop);
 router.delete("/liked-shops", protect, deleteLikedShop);
 
 router.get("/", getAllProfiles);

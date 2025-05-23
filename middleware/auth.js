@@ -4,12 +4,13 @@ import User from "../models/user.js";
 
 export async function protect(req, res, next) {
   let token;
-
+  console.log("req.headers.authorization", req.headers.authorization);
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")
   ) {
     token = req.headers.authorization.split(" ")[1];
+    console.log("token", token);
   }
 
   if (!token) {
