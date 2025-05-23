@@ -54,7 +54,6 @@ export const signIn = async (req, res, next) => {
 };
 
 export const googleSignIn = async (req, res, next) => {
-
   try {
     const { email, name, googleId, imageUrl } = req.body;
 
@@ -305,7 +304,6 @@ export const addLikedOffer = async (req, res, next) => {
 };
 
 export const deleteLikedOffer = async (req, res, next) => {
-  console.log("Deleting liked offer...", req.body);
   try {
     const user = await Consumer.findById(req.body.userId);
 
@@ -372,7 +370,6 @@ export const addLikedShop = async (req, res, next) => {
 };
 
 export const deleteLikedShop = async (req, res, next) => {
-  console.log("Deleting liked shop...", req.body);
   try {
     const user = await Consumer.findById(req.body.userId);
 

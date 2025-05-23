@@ -27,7 +27,6 @@ export async function protect(req, res, next) {
 
 export async function consumerProtect(req, res, next) {
   let token;
-  console.log("req.headers.authorization", req.headers.authorization);
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")

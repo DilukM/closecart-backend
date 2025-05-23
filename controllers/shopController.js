@@ -61,37 +61,26 @@ const uploadCoverImage = multer({ storage: coverImageStorage }).single(
 
 export async function uploadShopLogo(req, res, next) {
   try {
-    console.log(
-      `[uploadShopLogo] Starting logo upload for shopId: ${req.params.shopId}`
-    );
+ 
 
     // First check if shop exists and user is authorized
     const shop = await getShopById(req.params.shopId);
 
     if (!shop) {
-      console.log(
-        `[uploadShopLogo] Shop not found with id: ${req.params.shopId}`
-      );
+     
       return next(
         new ErrorResponse(`Shop not found with id ${req.params.shopId}`, 404)
       );
     }
 
-    console.log(`[uploadShopLogo] Found shop: ${shop.name || shop._id}`);
-    console.log(
-      `[uploadShopLogo] Request user shop: ${req.user.shop}, Shop ID: ${shop._id}`
-    );
+   
 
     if (shop._id.toString() !== req.user.shop.toString()) {
-      console.log(
-        `[uploadShopLogo] Authorization failed - User's shop: ${req.user.shop}, Requested shop: ${shop._id}`
-      );
+     
       return next(new ErrorResponse("Not authorized to update this shop", 403));
     }
 
-    console.log(
-      `[uploadShopLogo] User authorized, proceeding with file upload`
-    );
+
 
     // Use the middleware as a function with callbacks
     uploadLogo(req, res, async function (err) {
@@ -101,27 +90,19 @@ export async function uploadShopLogo(req, res, next) {
       }
 
       if (!req.file) {
-        console.log(`[uploadShopLogo] No file was uploaded`);
+        
         return next(new ErrorResponse("Please upload a logo image file", 400));
       }
 
-      console.log(`[uploadShopLogo] File successfully uploaded to Cloudinary`);
-      console.log(`[uploadShopLogo] File details:`, {
-        filename: req.file.originalname,
-        size: req.file.size,
-        path: req.file.path,
-      });
+     
 
       // Cloudinary automatically uploads the file
       const logoUrl = req.file.path;
 
       // Update the shop with the new logo URL:
-      console.log(
-        `[uploadShopLogo] Updating shop with new logo URL: ${logoUrl}`
-      );
+    
       await updateShopImagesService(req.params.shopId, { logo: logoUrl });
-      console.log(`[uploadShopLogo] Shop logo successfully updated`);
-
+     
       res.status(200).json({
         success: true,
         data: { logoUrl },
@@ -183,7 +164,7 @@ export async function uploadShopCoverImage(req, res, next) {
 }
 
 export async function getShop(req, res, next) {
-  console.log("[ShopController] getShop called", req.params.shopId);
+  
   try {
     const shop = await getShopById(req.params.shopId);
 

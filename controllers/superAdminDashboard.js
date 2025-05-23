@@ -258,9 +258,6 @@ export const importFromCSV = asyncHandler(async (req, res, next) => {
           await new Promise((resolve) => setTimeout(resolve, 100));
         }
 
-        console.log(
-          `CSV import completed: ${createdShopsCount} shops and ${createdOffersCount} offers created`
-        );
       } catch (err) {
         console.error(`Error processing CSV: ${err.message}`);
       }

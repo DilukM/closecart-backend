@@ -38,7 +38,7 @@ export async function getOffer(req, res, next) {
 }
 
 export async function createOffer(req, res, next) {
-  console.log("Creating offer with data:", req.body);
+
   try {
     // Set the shop from the authenticated user
     req.body.shop = req.user.shop;
@@ -90,9 +90,9 @@ export async function updateOffer(req, res, next) {
 
     // Check if a new image was uploaded
     if (req.file) {
-      console.log("New image uploaded for offer update:", req.file);
+     
       const imageUrl = req.file.path || req.file.secure_url;
-      console.log("New image URL to save:", imageUrl);
+     
 
       req.body.image = imageUrl;
     }
@@ -142,7 +142,7 @@ export async function getRelatedOffers(req, res, next) {
       limit: req.query.limit,
     };
 
-    console.log("Related offers query params:", queryParams); // Add debugging
+
 
     const relatedOffers = await offerService.getRelatedOffers(queryParams);
 
