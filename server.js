@@ -12,6 +12,8 @@ import {
   deleteOffer,
 } from "../controllers/superAdminDashboard.js";
 
+// Import routes
+
 const app = express();
 const router = express.Router();
 
@@ -30,5 +32,7 @@ router.route("/shops/:id").put(updateShop).delete(deleteShop);
 router.route("/offers").get(getOffers).post(createOffer);
 
 router.route("/offers/:id").put(updateOffer).delete(deleteOffer);
+
+// Mount routers
 
 export default router;

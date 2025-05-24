@@ -2,6 +2,7 @@ import Consumer from "../models/consumer.js";
 import ErrorResponse from "../utils/errorResponse.js";
 import sendEmail from "../utils/sendEmail.js";
 import { cloudinary, createUploader } from "../config/cloudinary.js";
+import { createNotification } from "../services/notificationService.js";
 
 const sendTokenResponse = (user, statusCode, res) => {
   const token = user.getSignedJwtToken();
@@ -20,6 +21,14 @@ export const signUp = async (req, res, next) => {
     const { name, email, password, phone } = req.body;
 
     const user = await Consumer.create({ name, email, password, phone });
+
+    // Create welcome notification for new user
+    await createNotification({
+      user: user._id,
+      title: "Welcome to CloseCart!",
+      message: `Hi ${name}, welcome to CloseCart! We're excited to have you on board.`,
+      type: "system",
+    });
 
     sendTokenResponse(user, 201, res);
   } catch (err) {
@@ -47,6 +56,14 @@ export const signIn = async (req, res, next) => {
       return next(new ErrorResponse("Invalid credentials", 401));
     }
 
+    // Create welcome back notification when user signs in
+    await createNotification({
+      user: user._id,
+      title: "Welcome Back!",
+      message: `Welcome back to CloseCart, ${user.name}! We've missed you.`,
+      type: "system",
+    });
+
     sendTokenResponse(user, 200, res);
   } catch (err) {
     next(err);
@@ -63,6 +80,7 @@ export const googleSignIn = async (req, res, next) => {
 
     // Check if user exists
     let user = await Consumer.findOne({ email });
+    let isNewUser = false;
 
     if (!user) {
       // Create new user if they don't exist
@@ -75,6 +93,7 @@ export const googleSignIn = async (req, res, next) => {
           Math.random().toString(36).slice(-8) +
           Math.random().toString(36).slice(-8), // Generate random password
       });
+      isNewUser = true;
     } else {
       // Update the googleId if it doesn't exist
       if (!user.googleId) {
@@ -82,6 +101,23 @@ export const googleSignIn = async (req, res, next) => {
         if (imageUrl) user.imageUrl = imageUrl;
         await user.save();
       }
+    }
+
+    // Create appropriate notification based on whether user is new or returning
+    if (isNewUser) {
+      await createNotification({
+        user: user._id,
+        title: "Welcome to CloseCart!",
+        message: `Hi ${name}, thanks for joining CloseCart with your Google account!`,
+        type: "system",
+      });
+    } else {
+      await createNotification({
+        user: user._id,
+        title: "Google Sign-In Successful",
+        message: `Welcome back, ${name}! You've successfully signed in with Google.`,
+        type: "system",
+      });
     }
 
     sendTokenResponse(user, 200, res);

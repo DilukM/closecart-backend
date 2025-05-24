@@ -65,6 +65,7 @@ import categoryRoutes from "./routes/categoryRoutes.js";
 import geocodingRoutes from "./routes/geocodingRoutes.js";
 import superAdmin from "./routes/superAdmin.js";
 import superAdminDashboard from "./routes/superAdminDashboard.js";
+import notificationRoutes from './routes/notificationRoutes.js';
 
 // Body parser
 app.use(_json());
@@ -88,6 +89,7 @@ app.use("/api/v1/categories", categoryRoutes);
 app.use("/api/v1/geocoding", geocodingRoutes);
 app.use("/api/v1/superadmin", superAdmin);
 app.use("/api/v1/superadmin/dashboard", superAdminDashboard);
+app.use('/api/v1/notifications', notificationRoutes);
 
 // WebSocket Connection
 io.on("connection", (socket) => {
